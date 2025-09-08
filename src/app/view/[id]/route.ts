@@ -1,5 +1,3 @@
-'use server';
-
 import { getHtml } from '@/lib/actions';
 import { type NextRequest, NextResponse } from 'next/server';
 
