@@ -7,7 +7,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'HTML Alter',
-  description: 'An interactive HTML editor with live preview and AI-powered accessibility suggestions.',
+  description: "Un éditeur HTML interactif avec aperçu en direct et suggestions d'accessibilité basées sur l'IA.",
 };
 
 export default function RootLayout({
@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <body className={`font-body antialiased`}>
         {children}
         <Toaster />

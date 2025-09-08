@@ -38,7 +38,7 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
         const result = await saveHtml(id, debouncedContent);
         if (result.error) {
           toast({
-            title: 'Error saving',
+            title: "Erreur d'enregistrement",
             description: result.error,
             variant: 'destructive',
           });
@@ -71,12 +71,12 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
         <div className="w-full md:w-1/2 h-1/2 md:h-full bg-white relative">
           <iframe
             srcDoc={content}
-            title="Live Preview"
+            title="Aperçu en direct"
             sandbox="allow-scripts allow-same-origin"
             className="w-full h-full border-0 transition-opacity duration-300"
           />
            <div className="absolute top-2 left-2 bg-slate-800 text-white text-xs px-2 py-1 rounded-full opacity-70 pointer-events-none">
-            Live Preview
+            Aperçu en direct
           </div>
         </div>
       </div>

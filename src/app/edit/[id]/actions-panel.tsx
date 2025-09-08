@@ -29,7 +29,7 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
       setSuggestions(result.suggestions);
     } catch (error) {
       console.error('Failed to get AI suggestions:', error);
-      setSuggestions(['An error occurred while fetching suggestions. Please try again.']);
+      setSuggestions(["Une erreur s'est produite lors de la récupération des suggestions. Veuillez réessayer."]);
     } finally {
       setIsAiLoading(false);
     }
@@ -46,12 +46,12 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
           {isSaving ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              <span>Saving...</span>
+              <span>Enregistrement...</span>
             </>
           ) : (
             <>
               <Save className="h-4 w-4" />
-              <span>Saved</span>
+              <span>Enregistré</span>
             </>
           )}
         </div>
@@ -60,15 +60,15 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
           <DialogTrigger asChild>
             <Button variant="outline" size="sm">
               <QrCode className="mr-2 h-4 w-4" />
-              Mobile View
+              Vue Mobile
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>View on Mobile</DialogTitle>
+              <DialogTitle>Voir sur Mobile</DialogTitle>
             </DialogHeader>
             <div className="flex flex-col items-center justify-center gap-4 p-4">
-              <p className="text-center text-muted-foreground">Scan this QR code with your mobile device to see a live preview of your page.</p>
+              <p className="text-center text-muted-foreground">Scannez ce code QR avec votre appareil mobile pour voir un aperçu en direct de votre page.</p>
               {qrUrl ? (
                 <div className="p-4 bg-white rounded-lg">
                   <QRCode value={qrUrl} size={200} />
@@ -85,12 +85,12 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
           <DialogTrigger asChild>
             <Button size="sm" onClick={handleGetSuggestions}>
               <Sparkles className="mr-2 h-4 w-4" />
-              Get AI Suggestions
+              Obtenir des suggestions IA
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
-              <DialogTitle>Accessibility Suggestions</DialogTitle>
+              <DialogTitle>Suggestions d'accessibilité</DialogTitle>
             </DialogHeader>
             <div className="max-h-[60vh] overflow-y-auto p-1">
               {isAiLoading ? (
@@ -104,12 +104,12 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
                   {suggestions.length > 0 ? (
                     suggestions.map((suggestion, index) => (
                       <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger>Suggestion #{index + 1}</AccordionTrigger>
+                        <AccordionTrigger>Suggestion n°{index + 1}</AccordionTrigger>
                         <AccordionContent>{suggestion}</AccordionContent>
                       </AccordionItem>
                     ))
                   ) : (
-                     <p className="text-muted-foreground text-center py-8">Click "Get AI Suggestions" to start.</p>
+                     <p className="text-muted-foreground text-center py-8">Cliquez sur "Obtenir des suggestions IA" pour commencer.</p>
                   )}
                 </Accordion>
               )}

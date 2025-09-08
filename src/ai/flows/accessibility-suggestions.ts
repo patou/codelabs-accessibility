@@ -1,25 +1,25 @@
 'use server';
 
 /**
- * @fileOverview An AI agent that provides accessibility suggestions for HTML code.
+ * @fileOverview Un agent IA qui fournit des suggestions d'accessibilité pour le code HTML.
  *
- * - getAccessibilitySuggestions - A function that takes HTML code as input and returns accessibility suggestions.
- * - AccessibilitySuggestionsInput - The input type for the getAccessibilitySuggestions function.
- * - AccessibilitySuggestionsOutput - The return type for the getAccessibilitySuggestions function.
+ * - getAccessibilitySuggestions - Une fonction qui prend du code HTML en entrée et renvoie des suggestions d'accessibilité.
+ * - AccessibilitySuggestionsInput - Le type d'entrée pour la fonction getAccessibilitySuggestions.
+ * - AccessibilitySuggestionsOutput - Le type de retour pour la fonction getAccessibilitySuggestions.
  */
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const AccessibilitySuggestionsInputSchema = z.object({
-  htmlCode: z.string().describe('The HTML code to analyze for accessibility issues.'),
+  htmlCode: z.string().describe("Le code HTML à analyser pour les problèmes d'accessibilité."),
 });
 export type AccessibilitySuggestionsInput = z.infer<typeof AccessibilitySuggestionsInputSchema>;
 
 const AccessibilitySuggestionsOutputSchema = z.object({
   suggestions: z
     .array(z.string())
-    .describe('A list of accessibility suggestions for the given HTML code.'),
+    .describe("Une liste de suggestions d'accessibilité pour le code HTML donné."),
 });
 export type AccessibilitySuggestionsOutput = z.infer<typeof AccessibilitySuggestionsOutputSchema>;
 
@@ -33,12 +33,12 @@ const accessibilitySuggestionsPrompt = ai.definePrompt({
   name: 'accessibilitySuggestionsPrompt',
   input: {schema: AccessibilitySuggestionsInputSchema},
   output: {schema: AccessibilitySuggestionsOutputSchema},
-  prompt: `You are an AI expert in web accessibility.
+  prompt: `Vous êtes un expert en accessibilité web.
 
-  Analyze the following HTML code and provide a list of suggestions to improve its accessibility.
-  Be specific and provide actionable recommendations.
+  Analysez le code HTML suivant et fournissez une liste de suggestions pour améliorer son accessibilité.
+  Soyez précis et fournissez des recommandations concrètes.
 
-  HTML Code:
+  Code HTML:
   {{htmlCode}}
 
   Suggestions:`,

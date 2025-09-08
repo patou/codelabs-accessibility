@@ -22,6 +22,6 @@ export async function saveHtml(id: string, content: string): Promise<{ success: 
     return { success: true };
   } catch (error) {
     console.error('Failed to save HTML:', error);
-    return { success: false, error: 'Failed to save content.' };
+    return { success: false, error: "Échec de l'enregistrement du contenu." };
   }
 }
