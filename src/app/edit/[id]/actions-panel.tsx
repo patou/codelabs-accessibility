@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Code, QrCode, Save, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
@@ -57,7 +58,13 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
               ) : (
                 <Skeleton className="w-[216px] h-[216px]" />
               )}
-               <p className="text-xs text-muted-foreground break-all">{qrUrl}</p>
+               {qrUrl ? (
+                <a href={qrUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all">
+                  {qrUrl}
+                </a>
+              ) : (
+                <Skeleton className="h-4 w-full max-w-sm" />
+              )}
             </div>
           </DialogContent>
         </Dialog>
