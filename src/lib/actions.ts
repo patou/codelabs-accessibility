@@ -1,27 +1,36 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { htmlStore } from './db';
+import { getHtmlFromDb, saveHtmlToDb } from './db';
 import { initialHtml } from './initial-html';
 
 export async function getHtml(id: string): Promise<string> {
-  if (htmlStore.has(id)) {
-    return htmlStore.get(id)!;
+  try {
+    const content = await getHtmlFromDb(id);
+    if (content !== null) {
+      return content;
+    }
+    
+    // Si le document n'existe pas, utilisez le HTML initial et sauvegardez-le.
+    await saveHtmlToDb(id, initialHtml);
+    return initialHtml;
+  } catch (error) {
+    // Si une erreur se produit (par ex. client hors ligne), retournez le HTML par défaut
+    // pour éviter de planter l'application.
+    console.warn(`Impossible de récupérer le HTML pour l'ID ${id} depuis la base de données. Retour au contenu par défaut. Erreur:`, error);
+    return initialHtml;
   }
-  // Store the initial HTML for the new ID if it doesn't exist
-  htmlStore.set(id, initialHtml);
-  return initialHtml;
 }
 
 export async function saveHtml(id: string, content: string): Promise<{ success: boolean; error?: string }> {
   try {
-    htmlStore.set(id, content);
-    // Revalidate both the edit and view paths to ensure content consistency
+    await saveHtmlToDb(id, content);
+    // Revalidez les chemins pour s'assurer que le contenu est à jour
     revalidatePath(`/edit/${id}`);
     revalidatePath(`/view/${id}`);
     return { success: true };
   } catch (error) {
-    console.error('Failed to save HTML:', error);
-    return { success: false, error: "Échec de l'enregistrement du contenu." };
+    console.error('Échec de la sauvegarde du HTML:', error);
+    return { success: false, error: "Échec de l'enregistrement du contenu dans la base de données." };
   }
 }
