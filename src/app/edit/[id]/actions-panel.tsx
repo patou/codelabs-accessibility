@@ -4,36 +4,17 @@ import { useState, useEffect } from 'react';
 import QRCode from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { getAccessibilitySuggestions } from '@/ai/flows/accessibility-suggestions';
-import { Code, QrCode, Sparkles, Loader2, Save } from 'lucide-react';
+import { Code, QrCode, Save, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   useEffect(() => {
-    // Ensure window is defined before using it
     if (typeof window !== 'undefined') {
       setQrUrl(`${window.location.origin}/view/${id}`);
     }
   }, [id]);
-
-  const handleGetSuggestions = async () => {
-    setIsAiLoading(true);
-    setSuggestions([]);
-    try {
-      const result = await getAccessibilitySuggestions({ htmlCode: content });
-      setSuggestions(result.suggestions);
-    } catch (error) {
-      console.error('Failed to get AI suggestions:', error);
-      setSuggestions(["Une erreur s'est produite lors de la récupération des suggestions. Veuillez réessayer."]);
-    } finally {
-      setIsAiLoading(false);
-    }
-  };
 
   return (
     <header className="flex items-center justify-between p-2 border-b bg-card">
@@ -77,42 +58,6 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
                 <Skeleton className="w-[216px] h-[216px]" />
               )}
                <p className="text-xs text-muted-foreground break-all">{qrUrl}</p>
-            </div>
-          </DialogContent>
-        </Dialog>
-
-        <Dialog onOpenChange={(open) => !open && setSuggestions([])}>
-          <DialogTrigger asChild>
-            <Button size="sm" onClick={handleGetSuggestions}>
-              <Sparkles className="mr-2 h-4 w-4" />
-              Obtenir des suggestions IA
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>Suggestions d'accessibilité</DialogTitle>
-            </DialogHeader>
-            <div className="max-h-[60vh] overflow-y-auto p-1">
-              {isAiLoading ? (
-                <div className="space-y-4">
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                  <Skeleton className="h-12 w-full" />
-                </div>
-              ) : (
-                <Accordion type="single" collapsible className="w-full">
-                  {suggestions.length > 0 ? (
-                    suggestions.map((suggestion, index) => (
-                      <AccordionItem value={`item-${index}`} key={index}>
-                        <AccordionTrigger>Suggestion n°{index + 1}</AccordionTrigger>
-                        <AccordionContent>{suggestion}</AccordionContent>
-                      </AccordionItem>
-                    ))
-                  ) : (
-                     <p className="text-muted-foreground text-center py-8">Cliquez sur "Obtenir des suggestions IA" pour commencer.</p>
-                  )}
-                </Accordion>
-              )}
             </div>
           </DialogContent>
         </Dialog>
