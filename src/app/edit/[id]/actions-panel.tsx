@@ -52,18 +52,18 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
             <div className="flex flex-col items-center justify-center gap-4 p-4">
               <p className="text-center text-muted-foreground">Scannez ce code QR avec votre appareil mobile pour voir un aperçu en direct de votre page.</p>
               {qrUrl ? (
-                <div className="p-4 bg-white rounded-lg">
-                  <QRCode value={qrUrl} size={200} />
+                <div className="p-4 bg-white rounded-lg flex items-center justify-center">
+                  <QRCode value={qrUrl} size={200} bgColor="#ffffff" fgColor="#000000" />
                 </div>
               ) : (
-                <Skeleton className="w-[216px] h-[216px]" />
+                <Skeleton className="w-[232px] h-[232px]" />
               )}
                {qrUrl ? (
-                <a href={qrUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all">
+                <a href={qrUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all max-w-full text-center">
                   {qrUrl}
                 </a>
               ) : (
-                <Skeleton className="h-4 w-full max-w-sm" />
+                <Skeleton className="h-4 w-full max-w-xs" />
               )}
             </div>
           </DialogContent>
