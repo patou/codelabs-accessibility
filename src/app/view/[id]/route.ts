@@ -3,7 +3,6 @@ import { type NextRequest } from 'next/server';
 import { initialHtml } from '@/lib/initial-html';
 
 // This page will always be dynamically rendered to get the latest content.
-export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,
