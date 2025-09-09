@@ -1,12 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import QRCode from 'qrcode.react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Code, QrCode, Save, Loader2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
-import Link from 'next/link';
 
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
@@ -53,7 +52,7 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
               <p className="text-center text-muted-foreground">Scannez ce code QR avec votre appareil mobile pour voir un aperçu en direct de votre page.</p>
               {qrUrl ? (
                 <div className="p-4 bg-white rounded-lg flex items-center justify-center">
-                  <QRCode value={qrUrl} size={200} bgColor="#ffffff" fgColor="#000000" />
+                  <QRCodeCanvas value={qrUrl} size={200} bgColor="#ffffff" fgColor="#000000" />
                 </div>
               ) : (
                 <Skeleton className="w-[232px] h-[232px]" />
