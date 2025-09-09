@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
@@ -22,14 +23,26 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export function EditorView({ id, initialContent }: { id: string; initialContent: string }) {
   const [content, setContent] = useState(initialContent);
-  const debouncedContent = useDebounce(content, 1000);
+  const debouncedContent = useDebounce(content, 500);
   const [isSaving, startSaveTransition] = useTransition();
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  useEffect(() => {
+    // Create a Blob URL from the HTML content to refresh the iframe reliably
+    const blob = new Blob([debouncedContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    setPreviewUrl(url);
+
+    // Clean up the object URL to avoid memory leaks
+    return () => URL.revokeObjectURL(url);
+  }, [debouncedContent]);
+
 
   useEffect(() => {
     // Only save if the content has changed from the initial state or subsequent debounced states
@@ -69,12 +82,17 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
           />
         </div>
         <div className="w-full md:w-1/2 h-1/2 md:h-full bg-white relative">
-          <iframe
-            srcDoc={content}
-            title="Aperçu en direct"
-            sandbox="allow-scripts allow-same-origin"
-            className="w-full h-full border-0 transition-opacity duration-300"
-          />
+          {isMounted ? (
+            <iframe
+              key={previewUrl} // Force re-render on URL change
+              src={previewUrl}
+              title="Aperçu en direct"
+              sandbox="allow-scripts allow-same-origin"
+              className="w-full h-full border-0 transition-opacity duration-300"
+            />
+          ) : (
+            <Skeleton className="w-full h-full" />
+          )}
            <div className="absolute top-2 left-2 bg-slate-800 text-white text-xs px-2 py-1 rounded-full opacity-70 pointer-events-none">
             Aperçu en direct
           </div>
