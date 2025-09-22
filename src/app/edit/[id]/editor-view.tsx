@@ -27,25 +27,14 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   const [isSaving, startSaveTransition] = useTransition();
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState('');
+  const [previewVersion, setPreviewVersion] = useState(0);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    // Create a Blob URL from the HTML content to refresh the iframe reliably
-    const blob = new Blob([debouncedContent], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    setPreviewUrl(url);
-
-    // Clean up the object URL to avoid memory leaks
-    return () => URL.revokeObjectURL(url);
-  }, [debouncedContent]);
-
-
-  useEffect(() => {
-    // Only save if the content has changed from the initial state or subsequent debounced states
+    // Only save if the content has changed from the initial state
     if (isMounted && debouncedContent !== initialContent) {
       startSaveTransition(async () => {
         const result = await saveHtml(id, debouncedContent);
@@ -55,10 +44,15 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
             description: result.error,
             variant: 'destructive',
           });
+        } else {
+          // Increment version to force iframe reload
+          setPreviewVersion((v) => v + 1);
         }
       });
     }
   }, [debouncedContent, id, toast, isMounted, initialContent]);
+
+  const previewUrl = `/view/${id}`;
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -84,7 +78,7 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
         <div className="w-full md:w-1/2 h-1/2 md:h-full bg-white relative">
           {isMounted ? (
             <iframe
-              key={previewUrl} // Force re-render on URL change
+              key={previewVersion} // Force re-render on version change
               src={previewUrl}
               title="Aperçu en direct"
               sandbox="allow-scripts allow-same-origin"
