@@ -31,6 +31,20 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
 
   useEffect(() => {
     setIsMounted(true);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        // Optionnel : on pourrait déclencher une sauvegarde manuelle ici si besoin.
+        // Pour l'instant, on empêche juste la popup du navigateur.
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
   }, []);
 
   useEffect(() => {
