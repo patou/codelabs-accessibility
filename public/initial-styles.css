@@ -6,21 +6,19 @@ body {
 }
 
 .header {
-  background-color: #fff;
-  padding: 20px;
+  background-color: rgb(32, 35, 42);
+  color: white;
   text-align: center;
-  border-bottom: 1px solid #ddd;
+  padding: 20px;
 }
 
 .header h1 {
   margin: 0;
   font-size: 2.5em;
-  color: #2c3e50;
 }
 
 .header p {
   margin: 5px 0 0;
-  color: #7f8c8d;
 }
 
 .nav {
@@ -186,7 +184,7 @@ h3 {
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .nav {
     padding: 10px;
   }
