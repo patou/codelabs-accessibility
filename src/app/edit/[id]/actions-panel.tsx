@@ -1,20 +1,47 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { QRCodeCanvas } from 'qrcode.react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Code, QrCode, Save, Loader2 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
+import { Code, QrCode, Save, Loader2, PlusSquare } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setQrUrl(`${window.location.origin}/view/${id}`);
     }
   }, [id]);
+
+  const handleNewDocument = () => {
+    // This logic runs on the client, so we can use browser APIs.
+    const array = new Uint8Array(8);
+    window.crypto.getRandomValues(array);
+    const newId = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    router.push(`/edit/${newId}`);
+  };
 
   return (
     <header className="flex items-center justify-between p-2 border-b bg-card">
@@ -36,6 +63,29 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
             </>
           )}
         </div>
+        
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <PlusSquare className="mr-2 h-4 w-4" />
+              Nouveau
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Créer un nouveau document ?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Vous êtes sur le point de quitter cette session d'édition pour en commencer une nouvelle. Vos modifications actuelles sont enregistrées. Voulez-vous continuer ?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={handleNewDocument}>
+                Continuer
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <Dialog>
           <DialogTrigger asChild>
