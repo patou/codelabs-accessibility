@@ -1,9 +1,14 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
-// Note: This reads the file at build time. 
-// Changes to initial.html will require a server restart in development.
-export const initialHtml = fs.readFileSync(
-  path.join(process.cwd(), 'src/lib/initial.html'),
-  'utf8'
-);
+/**
+ * Lit et retourne le contenu du template HTML initial à la demande.
+ * Cela garantit que la version la plus récente du fichier est toujours utilisée.
+ */
+export async function getInitialHtml(): Promise<string> {
+  // Le chemin vers le fichier initial.html
+  const filePath = path.join(process.cwd(), 'src/lib/initial.html');
+  // Lit le fichier de manière asynchrone
+  const content = await fs.readFile(filePath, 'utf8');
+  return content;
+}

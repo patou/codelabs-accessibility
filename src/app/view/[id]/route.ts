@@ -1,6 +1,6 @@
 import { getHtmlFromDb } from '@/lib/db';
 import { type NextRequest } from 'next/server';
-import { initialHtml } from '@/lib/initial-html';
+import { getInitialHtml } from '@/lib/initial-html';
 
 // This page will always be dynamically rendered to get the latest content.
 
@@ -15,7 +15,7 @@ export async function GET(
   let htmlContent = await getHtmlFromDb(params.id);
 
   if (htmlContent === null) {
-    htmlContent = initialHtml;
+    htmlContent = await getInitialHtml();
   }
 
   return new Response(htmlContent, {

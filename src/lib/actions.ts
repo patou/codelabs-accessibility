@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { getHtmlFromDb, saveHtmlToDb } from './db';
-import { initialHtml } from './initial-html';
+import { getInitialHtml } from './initial-html';
 
 export async function getHtml(id: string): Promise<string> {
   try {
@@ -11,14 +11,15 @@ export async function getHtml(id: string): Promise<string> {
       return content;
     }
     
-    // Si le document n'existe pas, utilisez le HTML initial et sauvegardez-le.
-    await saveHtmlToDb(id, initialHtml);
-    return initialHtml;
+    // Si le document n'existe pas, lisez le HTML initial et sauvegardez-le.
+    const initialContent = await getInitialHtml();
+    await saveHtmlToDb(id, initialContent);
+    return initialContent;
   } catch (error) {
     // Si une erreur se produit (par ex. client hors ligne), retournez le HTML par défaut
     // pour éviter de planter l'application.
     console.warn(`Impossible de récupérer le HTML pour l'ID ${id} depuis la base de données. Retour au contenu par défaut. Erreur:`, error);
-    return initialHtml;
+    return getInitialHtml();
   }
 }
 
