@@ -109,7 +109,7 @@ body {
 .form-section h4 {
   margin-top: 0;
 }
-.form-section input[type="email"] {
+.form-section input[type="email"], .form-section input[type="text"] {
   width: calc(100% - 120px);
   padding: 10px;
   border: 1px solid #bdc3c7;
@@ -126,6 +126,11 @@ body {
 }
 .form-section input[type="submit"]:hover {
   background-color: #2980b9;
+}
+.form-section .form-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
 .favorite-btn {
@@ -195,7 +200,7 @@ body {
   .container {
     width: 95%;
   }
-  .form-section input[type="email"] {
+  .form-section input[type="email"], .form-section input[type="text"] {
     width: 100%;
     margin-bottom: 10px;
   }
