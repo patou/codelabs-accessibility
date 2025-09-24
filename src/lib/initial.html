@@ -74,7 +74,7 @@
         <div class="form-label">Email</div>
         <input type="email" id="form-email">
         <div id="form-error" class="form-error"></div>
-        <input type="button" value="S'inscrire" onclick="validateForm()">
+        <input type="submit" value="S'inscrire" onclick="validateForm()">
       </div>
     </div>
   </div>
@@ -111,7 +111,6 @@
       } else {
         errorDiv.textContent = '';
         alert('Merci pour votre inscription !');
-        // Optionnel : réinitialiser le formulaire
         document.getElementById('form-nom').value = '';
         document.getElementById('form-prenom').value = '';
         document.getElementById('form-email').value = '';
