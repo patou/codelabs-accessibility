@@ -243,13 +243,20 @@ input[type="submit"]:hover {
   font-weight: normal;
 }
 
-.zenika-logo {
+.logo-list {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.logo {
   height: 40px;
   opacity: 0.8;
   transition: opacity 0.3s;
 }
 
-.zenika-logo:hover {
+.logo:hover {
   opacity: 1;
 }
 
