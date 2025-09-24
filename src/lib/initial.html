@@ -68,12 +68,13 @@
       <div class="form-section">
         <h4 id="inscription">Inscrivez-vous à l'événement</h4>
         <div class="form-label">Nom</div>
-        <input type="text">
+        <input type="text" id="form-nom">
         <div class="form-label">Prénom</div>
-        <input type="text">
+        <input type="text" id="form-prenom">
         <div class="form-label">Email</div>
-        <input type="email">
-        <input type="submit" value="S'inscrire">
+        <input type="email" id="form-email">
+        <div id="form-error" class="form-error"></div>
+        <input type="button" value="S'inscrire" onclick="validateForm()">
       </div>
     </div>
   </div>
@@ -97,6 +98,24 @@
   <script>
     function toggleFavorite(button) {
       button.classList.toggle('favorited');
+    }
+
+    function validateForm() {
+      const nom = document.getElementById('form-nom').value;
+      const prenom = document.getElementById('form-prenom').value;
+      const email = document.getElementById('form-email').value;
+      const errorDiv = document.getElementById('form-error');
+
+      if (nom.trim() === '' || prenom.trim() === '' || email.trim() === '') {
+        errorDiv.textContent = 'Veuillez remplir tous les champs.';
+      } else {
+        errorDiv.textContent = '';
+        alert('Merci pour votre inscription !');
+        // Optionnel : réinitialiser le formulaire
+        document.getElementById('form-nom').value = '';
+        document.getElementById('form-prenom').value = '';
+        document.getElementById('form-email').value = '';
+      }
     }
   </script>
 </body>
