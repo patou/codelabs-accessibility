@@ -92,6 +92,46 @@ h3, h4 {
   color: #2c3e50;
 }
 
+
+/* Accordéon */
+.accordion {
+  margin: 20px 0;
+}
+.accordion-item {
+  border-bottom: 1px solid #ddd;
+}
+.accordion-header {
+  background-color: #f9f9f9;
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 15px;
+  font-size: 18px;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.accordion-header:hover, .accordion-header.active {
+  background-color: #f1f1f1;
+}
+.accordion-header .icon {
+  font-size: 20px;
+  font-weight: bold;
+}
+.accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  background-color: white;
+  padding: 0 15px;
+}
+.accordion-content p {
+  margin: 15px 0;
+}
+
 .schedule-grid, .speaker-grid {
   display: grid;
   grid-template-columns: 1fr;

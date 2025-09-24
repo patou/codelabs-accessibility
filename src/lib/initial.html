@@ -27,6 +27,36 @@
         <br>
         <a href="#inscription" class="register-btn">Inscrivez-vous maintenant !</a>
       </div>
+
+      <div class="accordion">
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Lieu
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>L'événement a lieu à l'agence nantaise de Zenika, idéalement située en centre ville.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Date
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Le <strong>4 mai 2026</strong>, de 9h00 à 17h00.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header">
+            Nombre de places
+            <span class="icon">+</span>
+          </button>
+          <div class="accordion-content">
+            <p>Les places sont limitées à <strong>500 participants</strong> pour garantir une expérience interactive et de qualité.</sp>
+          </div>
+        </div>
+      </div>
       
       <h3 id="programme"><b>Sessions à la une</b></h3>
       
@@ -125,6 +155,23 @@
         document.getElementById('form-email').value = '';
       }
     }
+
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const accordionContent = button.nextElementSibling;
+            const icon = button.querySelector('.icon');
+
+            button.classList.toggle('active');
+
+            if (button.classList.contains('active')) {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                icon.textContent = '−';
+            } else {
+                accordionContent.style.maxHeight = 0;
+                icon.textContent = '+';
+            }
+        });
+    });
   </script>
 </body>
 </html>
