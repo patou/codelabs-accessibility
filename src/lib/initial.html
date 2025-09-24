@@ -94,7 +94,8 @@
   <div class="footer">
     <p>&copy; 2024 Conférence Web A11y. Tous droits réservés.</p>
   </div>
-  
+
+  <div id="snackbar">Votre inscription a bien été validée !</div>
   <script>
     function toggleFavorite(button) {
       button.classList.toggle('favorited');
@@ -110,7 +111,9 @@
         errorDiv.textContent = 'Veuillez remplir tous les champs.';
       } else {
         errorDiv.textContent = '';
-        alert('Merci pour votre inscription !');
+        var snackbar = document.getElementById("snackbar");
+        snackbar.className = "show";
+        setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
         document.getElementById('form-nom').value = '';
         document.getElementById('form-prenom').value = '';
         document.getElementById('form-email').value = '';
