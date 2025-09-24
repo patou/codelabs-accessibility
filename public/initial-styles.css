@@ -207,6 +207,12 @@ h3, h4 {
   margin-top: 40px;
 }
 
+.form-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
 .form-label {
   margin-top: 15px;
   margin-bottom: 5px;

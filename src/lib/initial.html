@@ -67,12 +67,18 @@
       
       <div class="form-section">
         <h4 id="inscription">Inscrivez-vous à l'événement</h4>
-        <div class="form-label">Nom</div>
-        <input type="text" id="form-nom">
-        <div class="form-label">Prénom</div>
-        <input type="text" id="form-prenom">
-        <div class="form-label">Email</div>
-        <input type="email" id="form-email">
+        <div class="form-fields">
+          <div>
+            <div class="form-label">Nom</div>
+            <input type="text" id="form-nom">
+            <div class="form-label">Email</div>
+            <input type="email" id="form-email">
+          </div>
+          <div>
+            <div class="form-label">Prénom</div>
+            <input type="text" id="form-prenom">
+          </div>
+        </div>
         <div id="form-error" class="form-error"></div>
         <input type="submit" value="S'inscrire" onclick="validateForm()">
       </div>
