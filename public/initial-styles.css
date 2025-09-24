@@ -26,6 +26,9 @@ body {
   background-color: #34495e;
   padding: 15px;
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 }
 
 .nav a {
@@ -98,6 +101,12 @@ h3, h4 {
 @media (min-width: 768px) {
   .schedule-grid, .speaker-grid {
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media(max-width: 576px) {
+  .nav {
+    flex-direction: column;
   }
 }
 
