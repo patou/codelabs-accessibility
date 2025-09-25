@@ -92,14 +92,15 @@ h3, h4 {
   color: #2c3e50;
 }
 
-
 /* Accordéon */
 .accordion {
   margin: 20px 0;
 }
+
 .accordion-item {
   border-bottom: 1px solid #ddd;
 }
+
 .accordion-header {
   background-color: #f9f9f9;
   border: none;
@@ -114,13 +115,16 @@ h3, h4 {
   justify-content: space-between;
   align-items: center;
 }
+
 .accordion-header:hover, .accordion-header.active {
   background-color: #f1f1f1;
 }
+
 .accordion-header .icon {
   font-size: 20px;
   font-weight: bold;
 }
+
 .accordion-content {
   max-height: 0;
   overflow: hidden;
@@ -128,6 +132,12 @@ h3, h4 {
   background-color: white;
   padding: 0 15px;
 }
+
+.accordion-content img {
+  width: 100%;
+  padding-bottom: 1rem;
+}
+
 .accordion-content p {
   margin: 15px 0;
 }
@@ -158,7 +168,7 @@ h3, h4 {
   position: relative;
 }
 
-.speaker-img {
+.session img {
   float: left;
   margin-right: 15px;
   border-radius: 50%;
@@ -222,7 +232,7 @@ h3, h4 {
   }
 }
 
-.speaker-profile .speaker-img-large {
+.speaker-profile img {
   width: 120px;
   height: 120px;
   border-radius: 50%;
