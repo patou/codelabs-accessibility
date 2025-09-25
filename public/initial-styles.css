@@ -12,9 +12,10 @@ body {
   text-align: center;
 }
 
-.header h1 {
+.header .title {
   margin: 0;
   font-size: 2.5em;
+  font-weight: bold;
 }
 
 .header p {
@@ -62,9 +63,10 @@ body {
   margin-bottom: 40px;
 }
 
-.hero h2 {
+.hero .subtitle {
   font-size: 2em;
   color: #2c3e50;
+  font-weight: bold;
 }
 
 .register-btn {
