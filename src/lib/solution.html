@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conférence sur l'Accessibilité Web</title>
+  <link rel="stylesheet" href="/initial-styles.css">
+</head>
+<body>
+
+  <header class="header">
+    <h1>Conférence Web A11y</h1>
+    <p>Construire un Web inclusif pour tous</p>
+  </header>
+
+  <nav class="nav" aria-label="Navigation principale">
+    <a href="#main-content">Accueil</a>
+    <a href="#programme">Programme</a>
+    <a href="#intervenants">Intervenants</a>
+    <a href="#inscription">S'inscrire</a>
+  </nav>
+
+  <main id="main-content" class="container">
+    <div class="main-content">
+      <section class="hero" aria-labelledby="hero-title">
+        <h2 id="hero-title" class="subtitle">L'Accessibilité : Plus qu'une obligation, une opportunité.</h2>
+        <p>Une conférence virtuelle pour apprendre à concevoir et développer des expériences numériques accessibles à tous.</p>
+        <br>
+        <a href="#inscription" class="register-btn">Inscrivez-vous maintenant !</a>
+      </section>
+
+      <section class="accordion" aria-label="Informations sur la conférence">
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-1">
+            Lieu
+            <span class="icon" aria-hidden="true">+</span>
+          </button>
+          <div id="accordion-content-1" class="accordion-content">
+            <p>L'événement a lieu à l'agence nantaise de Zenika, idéalement située en centre ville.</p>
+            <img src="/map.png" alt="Carte montrant l'emplacement de l'agence Zenika à Nantes.">
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-2">
+            Date
+            <span class="icon" aria-hidden="true">+</span>
+          </button>
+          <div id="accordion-content-2" class="accordion-content">
+            <p>Le <strong>4 mai 2026</strong>, de 9h00 à 17h00.</p>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-3">
+            Nombre de places
+            <span class="icon" aria-hidden="true">+</span>
+          </button>
+          <div id="accordion-content-3" class="accordion-content">
+            <p>Les places sont limitées à <strong>500 participants</strong> pour garantir une expérience interactive et de qualité.</p>
+          </div>
+        </div>
+      </section>
+      
+      <section id="programme" aria-labelledby="programme-title">
+        <h2 id="programme-title"><b>Sessions à la une</b></h2>
+      
+        <div class="schedule-grid">
+          <article class="session clearfix">
+            <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+            <img src="https://picsum.photos/id/48/100/100" alt="">
+            <div class="session-title"><h3>L'approche "L'accessibilité d'abord"</h3></div>
+            <p>Intervenant : <i>Patrice de Saint Steban</i></p>
+            <p>Découvrez pourquoi l'accessibilité n'est pas une réflexion après coup et comment créer des applications web inclusives dès le départ.</p>
+          </article>
+          <article class="session clearfix">
+             <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+            <img src="https://picsum.photos/id/60/100/100" alt="">
+            <div class="session-title"><h3>Navigation au clavier et lecteurs d'écran</h3></div>
+            <p>Intervenante : <i>Océane Gillard</i></p>
+            <p>Maîtrisez les techniques pour rendre vos applications entièrement utilisables sans souris et parfaitement interprétables par les lecteurs d'écran.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="intervenants" aria-labelledby="intervenants-title">
+        <h2 id="intervenants-title"><b>Nos Intervenants</b></h2>
+        <div class="speaker-grid">
+          <article class="speaker-profile">
+            <img src="https://picsum.photos/id/91/150/150" alt="Photo de Patrice de Saint Steban.">
+            <h3>Patrice de Saint Steban</h3>
+            <p>Expert en accessibilité numérique et développeur full stack passionné, Patrice partagera sa vision pour un web plus humain.</p>
+          </article>
+          <article class="speaker-profile">
+            <img src="https://picsum.photos/id/65/150/150" alt="Photo d'Océane Gillard.">
+            <h3>Océane Gillard</h3>
+            <p>Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
+          </article>
+        </div>
+      </section>
+      
+      <section class="form-section" aria-labelledby="inscription-title">
+        <h2 id="inscription-title">Inscrivez-vous à l'événement</h2>
+        <form onsubmit="validateForm(event)">
+            <div class="form-fields">
+              <div>
+                <label class="form-label" for="form-nom">Nom</label>
+                <input type="text" id="form-nom" autocomplete="family-name">
+                <label class="form-label" for="form-email">Email</label>
+                <input type="email" id="form-email" autocomplete="email">
+              </div>
+              <div>
+                <label class="form-label" for="form-prenom">Prénom</label>
+                <input type="text" id="form-prenom" autocomplete="given-name">
+              </div>
+            </div>
+            <div id="form-error" class="form-error" role="alert" aria-live="assertive"></div>
+            <input type="submit" value="S'inscrire">
+        </form>
+      </section>
+    </div>
+  </main>
+
+  <aside class="sponsors" aria-labelledby="sponsors-title">
+    <h2 id="sponsors-title">Sponsorisé par</h2>
+    <div class="logo-list">
+      <a href="https://zenika.com" target="_blank" rel="noopener noreferrer">
+        <img src="/logo_zenika.svg" class="logo" alt="Logo de Zenika">
+      </a>
+      <a href="https://play.google.com/store/apps/details?id=zigotote.barbu_score" target="_blank" rel="noopener noreferrer">
+        <img src="/logo_barbu.png" class="logo" alt="Logo de l'application Score Barbu">
+      </a>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <p>&copy; 2024 Conférence Web A11y. Tous droits réservés.</p>
+  </footer>
+
+  <div id="snackbar" role="status" aria-live="polite">Votre inscription a bien été validée !</div>
+  <script>
+    function toggleFavorite(button) {
+      button.classList.toggle('favorited');
+      const isFavorited = button.classList.contains('favorited');
+      const sessionTitle = button.closest('article').querySelector('h3').textContent;
+      if (isFavorited) {
+        button.setAttribute('aria-label', `Retirer la session '${sessionTitle}' des favoris`);
+      } else {
+        button.setAttribute('aria-label', `Ajouter la session '${sessionTitle}' aux favoris`);
+      }
+    }
+
+    function validateForm(event) {
+      event.preventDefault(); // Prevent default form submission
+      const nom = document.getElementById('form-nom').value;
+      const prenom = document.getElementById('form-prenom').value;
+      const email = document.getElementById('form-email').value;
+      const errorDiv = document.getElementById('form-error');
+
+      if (nom.trim() === '' || prenom.trim() === '' || email.trim() === '') {
+        errorDiv.textContent = 'Veuillez remplir tous les champs.';
+      } else {
+        errorDiv.textContent = '';
+        var snackbar = document.getElementById("snackbar");
+        snackbar.className = "show";
+        setTimeout(function(){ snackbar.className = snackbar.className.replace("show", ""); }, 3000);
+        document.getElementById('form-nom').value = '';
+        document.getElementById('form-prenom').value = '';
+        document.getElementById('form-email').value = '';
+      }
+    }
+
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const content = button.nextElementSibling;
+            const isExpanded = button.getAttribute('aria-expanded') === 'true';
+            
+            button.setAttribute('aria-expanded', !isExpanded);
+            
+            if (!isExpanded) {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                button.querySelector('.icon').textContent = '−';
+            } else {
+                content.style.maxHeight = '0px';
+                button.querySelector('.icon').textContent = '+';
+            }
+        });
+    });
+  </script>
+</body>
+</html>
