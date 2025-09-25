@@ -1,6 +1,7 @@
 import { getHtmlFromDb } from '@/lib/db';
 import { type NextRequest } from 'next/server';
-import { getInitialHtml, getSolutionHtml } from '@/lib/actions';
+import { getSolutionHtml } from '@/lib/actions';
+import { getInitialHtml } from '@/lib/initial-html';
 
 // This page will always be dynamically rendered to get the latest content.
 export const dynamic = 'force-dynamic';
