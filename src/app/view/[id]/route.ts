@@ -1,8 +1,9 @@
 import { getHtmlFromDb } from '@/lib/db';
 import { type NextRequest } from 'next/server';
-import { getInitialHtml } from '@/lib/initial-html';
+import { getInitialHtml, getSolutionHtml } from '@/lib/actions';
 
 // This page will always be dynamically rendered to get the latest content.
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   request: NextRequest,
@@ -12,10 +13,19 @@ export async function GET(
     return new Response('Not Found', { status: 404 });
   }
 
-  let htmlContent = await getHtmlFromDb(params.id);
+  let htmlContent: string | null;
+
+  if (params.id === 'solution') {
+    htmlContent = await getSolutionHtml();
+  } else {
+    htmlContent = await getHtmlFromDb(params.id);
+    if (htmlContent === null) {
+      htmlContent = await getInitialHtml();
+    }
+  }
 
   if (htmlContent === null) {
-    htmlContent = await getInitialHtml();
+    return new Response('Content not found', { status: 404 });
   }
 
   return new Response(htmlContent, {
