@@ -47,7 +47,7 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
     <header className="flex items-center justify-between p-2 border-b bg-card">
       <div className="flex items-center gap-2">
         <Code className="h-6 w-6 text-primary" />
-        <h1 className="text-lg font-semibold">HTML Alter</h1>
+        <h1 className="text-lg font-semibold">Codelabs Accessibilité</h1>
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground mr-4">

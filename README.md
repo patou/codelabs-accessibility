@@ -1,6 +1,6 @@
-# HTML Alter - Éditeur HTML Interactif
+# Codelabs Accessibilité - Éditeur HTML Interactif
 
-HTML Alter est une application web Next.js qui fournit un éditeur HTML simple et efficace avec un aperçu en direct. Il est conçu pour le prototypage rapide, le débogage et l'expérimentation avec du code HTML, CSS et JavaScript. Le contenu est automatiquement sauvegardé dans Firebase Firestore, et chaque session d'édition est accessible via une URL unique.
+Codelabs Accessibilité est une application web Next.js qui fournit un éditeur HTML simple et efficace avec un aperçu en direct. Il est conçu pour le prototypage rapide, le débogage et l'expérimentation avec du code HTML, CSS et JavaScript. Le contenu est automatiquement sauvegardé dans Firebase Firestore, et chaque session d'édition est accessible via une URL unique.
 
 ## Fonctionnalités
 
