@@ -107,18 +107,18 @@
             <div class="form-fields">
               <div>
                 <label class="form-label" for="form-nom">Nom</label>
-                <input type="text" id="form-nom" autocomplete="family-name">
+                <input type="text" id="form-nom" autocomplete="family-name" tabindex="1">
                 
                 <label class="form-label" for="form-email">Email</label>
-                <input type="email" id="form-email" autocomplete="email">
+                <input type="email" id="form-email" autocomplete="email" tabindex="3">
               </div>
               <div>
                 <label class="form-label" for="form-prenom">Prénom</label>
-                <input type="text" id="form-prenom" autocomplete="given-name">
+                <input type="text" id="form-prenom" autocomplete="given-name" tabindex="2">
               </div>
             </div>
             <div id="form-error" class="form-error" role="alert" aria-live="assertive"></div>
-            <input type="submit" value="S'inscrire">
+            <input type="submit" value="S'inscrire" tabindex="4">
         </form>
       </section>
     </div>
@@ -182,10 +182,9 @@
             content.hidden = isExpanded;
             
             if (!isExpanded) {
-                content.style.maxHeight = content.scrollHeight + 'px';
+                // No need to manage max-height with hidden attribute
                 button.querySelector('.icon').textContent = '−';
             } else {
-                content.style.maxHeight = '0px';
                 button.querySelector('.icon').textContent = '+';
             }
         });
