@@ -9,7 +9,7 @@
 <body>
 
   <header class="header">
-    <h1>Conférence Web <abbr title="Accessibilité">A11y</abbr></h1>
+    <h1 aria-label="Conférence Web Accessibilité">Conférence Web <abbr title="Accessibilité">A11y</abbr></h1>
     <p>Construire un Web inclusif pour tous</p>
   </header>
 
@@ -177,14 +177,19 @@
         button.addEventListener('click', () => {
             const content = button.nextElementSibling;
             const isExpanded = button.getAttribute('aria-expanded') === 'true';
-            
+
             button.setAttribute('aria-expanded', !isExpanded);
-            content.hidden = isExpanded;
             
             if (!isExpanded) {
-                // No need to manage max-height with hidden attribute
+                content.hidden = false;
+                content.style.maxHeight = content.scrollHeight + 'px';
                 button.querySelector('.icon').textContent = '−';
             } else {
+                content.style.maxHeight = 0;
+                // Laisser le temps à l'animation de se terminer avant de masquer
+                setTimeout(() => {
+                    content.hidden = true;
+                }, 200); // 200ms, comme la transition CSS
                 button.querySelector('.icon').textContent = '+';
             }
         });
