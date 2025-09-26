@@ -1,4 +1,4 @@
-# **App Name**: HTML Alter
+# **App Name**: Codelabs Accessibilité
 
 ## Core Features:
 

@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
-  title: 'HTML Alter',
+  title: 'Codelabs Accessibilité',
   description: "Un éditeur HTML interactif avec aperçu en direct et suggestions d'accessibilité basées sur l'IA.",
 };
 
