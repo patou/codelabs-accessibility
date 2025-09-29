@@ -8,17 +8,23 @@ import { notFound } from 'next/navigation';
 export async function getHtml(id: string): Promise<string> {
   try {
     const content = await getHtmlFromDb(id);
+    // Si le contenu est trouvé, on le retourne
     if (content !== null) {
       return content;
     }
     
-    // Si le document n'existe pas, lisez le HTML initial et sauvegardez-le.
+    // Si le document n'existe pas en base, on utilise le contenu initial...
     const initialContent = await getInitialHtml();
-    await saveHtmlToDb(id, initialContent);
+    // ... et on essaie de le sauvegarder pour la prochaine fois, sans bloquer l'utilisateur.
+    // Cette opération peut échouer si le client est hors ligne, mais ce n'est pas grave.
+    await saveHtmlToDb(id, initialContent).catch(e => {
+        console.warn(`Impossible de faire la sauvegarde initiale pour l'ID ${id}. Le client est peut-être hors ligne.`, e);
+    });
     return initialContent;
+
   } catch (error) {
-    // Si une erreur se produit (par ex. client hors ligne), retournez le HTML par défaut
-    // pour éviter de planter l'application.
+    // Si une erreur se produit pendant la récupération (par ex. client hors ligne),
+    // on retourne le HTML initial par défaut pour éviter de planter l'application.
     console.warn(`Impossible de récupérer le HTML pour l'ID ${id} depuis la base de données. Retour au contenu par défaut. Erreur:`, error);
     return getInitialHtml();
   }
