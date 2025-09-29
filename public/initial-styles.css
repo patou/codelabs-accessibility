@@ -271,9 +271,10 @@ h3, h4 {
 }
 
 .form-fields {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
   gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .form-label {
