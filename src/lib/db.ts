@@ -1,5 +1,6 @@
 import * as admin from 'firebase-admin';
-import 'dotenv/config';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Collection Firestore où les documents HTML seront stockés
 const HTML_COLLECTION = 'html_documents';
@@ -9,43 +10,48 @@ const HTML_COLLECTION = 'html_documents';
  * Cela évite les initialisations multiples en environnement de développement avec rechargement à chaud.
  */
 function getFirestoreInstance() {
-  if (!admin.apps.length) {
-    // En production (sur App Hosting), initialisez sans paramètres.
-    // Le SDK détecte automatiquement les identifiants de l'environnement.
-    if (process.env.NODE_ENV === 'production' && process.env.K_SERVICE) {
-        admin.initializeApp();
-    } 
-    // En développement, utilisez les identifiants du compte de service depuis les variables d'environnement.
-    else if (process.env.FIREBASE_PRIVATE_KEY) {
+  if (admin.apps.length > 0) {
+    return admin.firestore();
+  }
+
+  // En production (sur App Hosting), le SDK détecte automatiquement les identifiants.
+  if (process.env.NODE_ENV === 'production' && process.env.K_SERVICE) {
+    admin.initializeApp();
+  } else {
+    // En développement local, on utilise un fichier de clé de compte de service.
+    const serviceAccountPath = path.join(process.cwd(), 'firebase-service-account.json');
+    
+    if (fs.existsSync(serviceAccountPath)) {
       try {
+        const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
         admin.initializeApp({
-          credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            // Remplacez les échappements de nouvelle ligne par de vraies nouvelles lignes
-            privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
-          }),
+          credential: admin.credential.cert(serviceAccount),
         });
-      } catch (error: any) {
-        console.error("ERREUR D'INITIALISATION FIREBASE ADMIN:", error.message);
-        console.warn("Vérifiez que les variables d'environnement dans .env.local sont correctes et que la clé privée est bien formatée.");
+      } catch (error) {
+        console.error("Erreur de parsing du fichier firebase-service-account.json:", error);
+        console.warn("Assurez-vous que le fichier est un JSON valide.");
       }
     } else {
-      // Avertissement si les variables ne sont pas définies en local
       console.warn(`
-        ********************************************************************************
-        * VARIABLES D'ENVIRONNEMENT FIREBASE NON DÉFINIES POUR LE DÉVELOPPEMENT LOCAL *
-        *------------------------------------------------------------------------------*
-        * L'application ne pourra pas se connecter à Firestore.                        *
-        * Veuillez créer un fichier .env.local à la racine du projet et y ajouter   *
-        * les variables d'environnement de votre compte de service Firebase.         *
-        * Consultez le README.md pour plus d'instructions.                           *
-        ********************************************************************************
+        ************************************************************************
+        * FICHIER DE COMPTE DE SERVICE FIREBASE INTROUVABLE (LOCAL)            *
+        *----------------------------------------------------------------------*
+        * Pour le développement local, l'application ne peut pas se connecter  *
+        * à Firestore sans identifiants.                                       *
+        *                                                                      *
+        * Veuillez télécharger un fichier de clé de compte de service depuis   *
+        * la console Firebase, le renommer en 'firebase-service-account.json'  *
+        * et le placer à la racine de votre projet.                            *
+        *                                                                      *
+        * Consultez le README.md pour les instructions détaillées.             *
+        ************************************************************************
       `);
     }
   }
+
   return admin.firestore();
 }
+
 
 /**
  * Récupère le contenu HTML depuis Firestore.
@@ -56,7 +62,10 @@ export async function getHtmlFromDb(id: string): Promise<string | null> {
   try {
     const db = getFirestoreInstance();
     // Si l'initialisation a échoué, db peut ne pas avoir de méthodes.
-    if (!db) return null;
+    if (!db || typeof db.collection !== 'function') {
+        console.warn("Firestore n'est pas disponible. L'opération de lecture a été annulée.");
+        return null;
+    }
     
     const docRef = db.collection(HTML_COLLECTION).doc(id);
     const docSnap = await docRef.get();
@@ -84,7 +93,10 @@ export async function saveHtmlToDb(id: string, content: string): Promise<void> {
   try {
     const db = getFirestoreInstance();
      // Si l'initialisation a échoué, ne rien faire.
-    if (!db) return;
+    if (!db || typeof db.collection !== 'function') {
+        console.warn("Firestore n'est pas disponible. L'opération de sauvegarde a été annulée.");
+        return;
+    }
 
     const docRef = db.collection(HTML_COLLECTION).doc(id);
     await docRef.set({ content }, { merge: true });

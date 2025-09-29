@@ -63,43 +63,15 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
     npm install
     ```
 
-3.  Créez un fichier d'environnement local :
-    ```bash
-    touch .env.local
-    ```
-
-4.  **Générez une clé de compte de service Firebase** :
+3.  **Générez une clé de compte de service Firebase** :
     - Dans la console Firebase, allez dans les **Paramètres du projet** (icône d'engrenage en haut à gauche).
     - Allez dans l'onglet **Comptes de service**.
     - Cliquez sur le bouton **"Générer une nouvelle clé privée"**.
     - Un fichier JSON sera téléchargé. **Traitez ce fichier comme un mot de passe, ne le partagez jamais et ne le commitez pas dans Git.**
 
-5.  Ouvrez le fichier JSON téléchargé et copiez les valeurs `project_id`, `client_email`, et `private_key`.
-
-6.  Ajoutez ces valeurs dans votre fichier `.env.local` comme ceci :
-    ```env
-    FIREBASE_PROJECT_ID="votre-project-id"
-    FIREBASE_CLIENT_EMAIL="votre-compte-de-service@...iam.gserviceaccount.com"
-    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...votre-clé-privée...\n-----END PRIVATE KEY-----\n"
-    ```
-    
-    **ATTENTION : Formatage de `FIREBASE_PRIVATE_KEY`**
-    La clé privée doit être sur **une seule ligne** et entourée de **guillemets doubles**. Les sauts de ligne de la clé originale doivent être remplacés par le caractère `\n`.
-    
-    *Exemple incorrect (multi-lignes) :*
-    ```env
-    # NE FAITES PAS ÇA
-    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
-    MII...
-    ...
-    -----END PRIVATE KEY-----"
-    ```
-    
-    *Exemple correct (sur une seule ligne avec \n) :*
-    ```env
-    # FAITES COMME CECI
-    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...contenu de la clé...\n-----END PRIVATE KEY-----\n"
-    ```
+4.  **Placez la clé à la racine du projet** :
+    - Renommez le fichier JSON téléchargé en `firebase-service-account.json`.
+    - Placez ce fichier à la racine de votre projet. Le fichier `.gitignore` est déjà configuré pour l'ignorer.
 
 ### 4. Lancer le serveur de développement
 
@@ -113,7 +85,7 @@ L'application sera disponible à l'adresse [http://localhost:9002](http://localh
 
 ## Déploiement
 
-Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**. L'environnement de production n'utilise pas les clés du fichier `.env.local` ; il s'authentifie automatiquement et de manière sécurisée.
+Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**. L'environnement de production s'authentifie automatiquement de manière sécurisée et n'utilise pas le fichier de clé de service local.
 
 1.  Assurez-vous d'avoir la [Firebase CLI](https://firebase.google.com/docs/cli) installée et connectée à votre compte Google.
 
