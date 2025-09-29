@@ -10,9 +10,14 @@ const HTML_COLLECTION = 'html_documents';
  */
 function getFirestoreInstance() {
   if (!admin.apps.length) {
-    if (process.env.NODE_ENV === 'development') {
-      // En développement, utilisez les identifiants du compte de service depuis les variables d'environnement.
-      if (process.env.FIREBASE_PRIVATE_KEY) {
+    // En production (sur App Hosting), initialisez sans paramètres.
+    // Le SDK détecte automatiquement les identifiants de l'environnement.
+    if (process.env.NODE_ENV === 'production' && process.env.K_SERVICE) {
+        admin.initializeApp();
+    } 
+    // En développement, utilisez les identifiants du compte de service depuis les variables d'environnement.
+    else if (process.env.FIREBASE_PRIVATE_KEY) {
+      try {
         admin.initializeApp({
           credential: admin.credential.cert({
             projectId: process.env.FIREBASE_PROJECT_ID,
@@ -21,23 +26,22 @@ function getFirestoreInstance() {
             privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
           }),
         });
-      } else {
-        // Avertissement si les variables ne sont pas définies en local
-        console.warn(`
-          ********************************************************************************
-          * VARIABLES D'ENVIRONNEMENT FIREBASE NON DÉFINIES POUR LE DÉVELOPPEMENT LOCAL *
-          *------------------------------------------------------------------------------*
-          * L'application ne pourra pas se connecter à Firestore.                        *
-          * Veuillez créer un fichier .env.local à la racine du projet et y ajouter   *
-          * les variables d'environnement de votre compte de service Firebase.         *
-          * Consultez le README.md pour plus d'instructions.                           *
-          ********************************************************************************
-        `);
+      } catch (error: any) {
+        console.error("ERREUR D'INITIALISATION FIREBASE ADMIN:", error.message);
+        console.warn("Vérifiez que les variables d'environnement dans .env.local sont correctes et que la clé privée est bien formatée.");
       }
     } else {
-      // En production (sur App Hosting), initialisez sans paramètres.
-      // Le SDK les utilisera automatiquement.
-      admin.initializeApp();
+      // Avertissement si les variables ne sont pas définies en local
+      console.warn(`
+        ********************************************************************************
+        * VARIABLES D'ENVIRONNEMENT FIREBASE NON DÉFINIES POUR LE DÉVELOPPEMENT LOCAL *
+        *------------------------------------------------------------------------------*
+        * L'application ne pourra pas se connecter à Firestore.                        *
+        * Veuillez créer un fichier .env.local à la racine du projet et y ajouter   *
+        * les variables d'environnement de votre compte de service Firebase.         *
+        * Consultez le README.md pour plus d'instructions.                           *
+        ********************************************************************************
+      `);
     }
   }
   return admin.firestore();
@@ -51,6 +55,9 @@ function getFirestoreInstance() {
 export async function getHtmlFromDb(id: string): Promise<string | null> {
   try {
     const db = getFirestoreInstance();
+    // Si l'initialisation a échoué, db peut ne pas avoir de méthodes.
+    if (!db) return null;
+    
     const docRef = db.collection(HTML_COLLECTION).doc(id);
     const docSnap = await docRef.get();
 
@@ -76,6 +83,9 @@ export async function getHtmlFromDb(id: string): Promise<string | null> {
 export async function saveHtmlToDb(id: string, content: string): Promise<void> {
   try {
     const db = getFirestoreInstance();
+     // Si l'initialisation a échoué, ne rien faire.
+    if (!db) return;
+
     const docRef = db.collection(HTML_COLLECTION).doc(id);
     await docRef.set({ content }, { merge: true });
   } catch (error) {

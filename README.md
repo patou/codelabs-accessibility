@@ -82,7 +82,24 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
     FIREBASE_CLIENT_EMAIL="votre-compte-de-service@...iam.gserviceaccount.com"
     FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...votre-clé-privée...\n-----END PRIVATE KEY-----\n"
     ```
-    **Important pour `FIREBASE_PRIVATE_KEY`** : Assurez-vous de bien copier toute la clé, y compris `-----BEGIN PRIVATE KEY-----` et `-----END PRIVATE KEY-----`, et de conserver les `\n` pour les sauts de ligne. Le plus simple est de mettre la valeur entre guillemets.
+    
+    **ATTENTION : Formatage de `FIREBASE_PRIVATE_KEY`**
+    La clé privée doit être sur **une seule ligne** et entourée de **guillemets doubles**. Les sauts de ligne de la clé originale doivent être remplacés par le caractère `\n`.
+    
+    *Exemple incorrect (multi-lignes) :*
+    ```env
+    # NE FAITES PAS ÇA
+    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----
+    MII...
+    ...
+    -----END PRIVATE KEY-----"
+    ```
+    
+    *Exemple correct (sur une seule ligne avec \n) :*
+    ```env
+    # FAITES COMME CECI
+    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...contenu de la clé...\n-----END PRIVATE KEY-----\n"
+    ```
 
 ### 4. Lancer le serveur de développement
 
