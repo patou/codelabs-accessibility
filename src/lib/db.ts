@@ -1,4 +1,5 @@
 import * as admin from 'firebase-admin';
+import 'dotenv/config';
 
 // Collection Firestore où les documents HTML seront stockés
 const HTML_COLLECTION = 'html_documents';
@@ -9,7 +10,35 @@ const HTML_COLLECTION = 'html_documents';
  */
 function getFirestoreInstance() {
   if (!admin.apps.length) {
-    admin.initializeApp();
+    if (process.env.NODE_ENV === 'development') {
+      // En développement, utilisez les identifiants du compte de service depuis les variables d'environnement.
+      if (process.env.FIREBASE_PRIVATE_KEY) {
+        admin.initializeApp({
+          credential: admin.credential.cert({
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+            // Remplacez les échappements de nouvelle ligne par de vraies nouvelles lignes
+            privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+          }),
+        });
+      } else {
+        // Avertissement si les variables ne sont pas définies en local
+        console.warn(`
+          ********************************************************************************
+          * VARIABLES D'ENVIRONNEMENT FIREBASE NON DÉFINIES POUR LE DÉVELOPPEMENT LOCAL *
+          *------------------------------------------------------------------------------*
+          * L'application ne pourra pas se connecter à Firestore.                        *
+          * Veuillez créer un fichier .env.local à la racine du projet et y ajouter   *
+          * les variables d'environnement de votre compte de service Firebase.         *
+          * Consultez le README.md pour plus d'instructions.                           *
+          ********************************************************************************
+        `);
+      }
+    } else {
+      // En production (sur App Hosting), initialisez sans paramètres.
+      // Le SDK les utilisera automatiquement.
+      admin.initializeApp();
+    }
   }
   return admin.firestore();
 }
@@ -20,14 +49,21 @@ function getFirestoreInstance() {
  * @returns Le contenu HTML sous forme de chaîne de caractères.
  */
 export async function getHtmlFromDb(id: string): Promise<string | null> {
-  const db = getFirestoreInstance();
-  const docRef = db.collection(HTML_COLLECTION).doc(id);
-  const docSnap = await docRef.get();
+  try {
+    const db = getFirestoreInstance();
+    const docRef = db.collection(HTML_COLLECTION).doc(id);
+    const docSnap = await docRef.get();
 
-  if (docSnap.exists) {
-    // Le 'content' peut être undefined si le document est vide.
-    return docSnap.data()?.content ?? null;
-  } else {
+    if (docSnap.exists) {
+      // Le 'content' peut être undefined si le document est vide.
+      return docSnap.data()?.content ?? null;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération depuis Firestore:', error);
+    // Si la connexion échoue (par ex. en local sans config), on retourne null.
+    // L'action appelante se chargera de fournir un contenu par défaut.
     return null;
   }
 }
@@ -38,7 +74,14 @@ export async function getHtmlFromDb(id: string): Promise<string | null> {
  * @param content Le contenu HTML à sauvegarder.
  */
 export async function saveHtmlToDb(id: string, content: string): Promise<void> {
-  const db = getFirestoreInstance();
-  const docRef = db.collection(HTML_COLLECTION).doc(id);
-  await docRef.set({ content }, { merge: true });
+  try {
+    const db = getFirestoreInstance();
+    const docRef = db.collection(HTML_COLLECTION).doc(id);
+    await docRef.set({ content }, { merge: true });
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde dans Firestore:', error);
+    // Ne propage pas l'erreur pour ne pas faire planter l'application,
+    // surtout si le client est hors ligne.
+    throw error;
+  }
 }

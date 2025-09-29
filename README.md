@@ -17,7 +17,7 @@ Codelabs Accessibilité est une application web Next.js qui fournit un éditeur 
 
 - **Framework** : [Next.js](https://nextjs.org/) (App Router)
 - **Langage** : [TypeScript](https://www.typescriptlang.org/)
-- **Base de données** : [Firebase Firestore](https://firebase.google.com/docs/firestore)
+- **Base de données** : [Firebase Firestore](https://firebase.google.com/docs/firestore) (utilisé via le SDK Admin côté serveur)
 - **Composants UI** : [shadcn/ui](https://ui.shadcn.com/) & Radix UI
 - **Styling** : [Tailwind CSS](https://tailwindcss.com/)
 - **Éditeur de code** : [@monaco-editor/react](https://www.npmjs.com/package/@monaco-editor/react)
@@ -37,9 +37,18 @@ Pour lancer le projet en local, suivez ces étapes.
 Ce projet nécessite une connexion à un projet Firebase pour la persistance des données.
 
 1.  Créez un projet sur la [console Firebase](https://console.firebase.google.com/).
-2.  Dans votre projet, créez une application web.
-3.  Copiez les identifiants de configuration de votre application Firebase.
-4.  Créez une base de données **Firestore** dans votre projet.
+2.  Créez une base de données **Firestore** dans votre projet.
+3.  **Activez les règles de sécurité Firestore** pour permettre la lecture et l'écriture. Allez dans l'onglet `Règles` de Firestore et utilisez la configuration suivante (attention : c'est très permissif, à utiliser uniquement pour le développement) :
+    ```
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /html_documents/{docId} {
+          allow read, write: if true;
+        }
+      }
+    }
+    ```
 
 ### 3. Configuration de l'environnement local
 
@@ -54,20 +63,26 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
     npm install
     ```
 
-3.  Créez un fichier d'environnement local. Vous pouvez copier le fichier `.env.local.example` (s'il existe) ou en créer un nouveau :
+3.  Créez un fichier d'environnement local :
     ```bash
     touch .env.local
     ```
 
-4.  Ajoutez vos identifiants Firebase dans le fichier `.env.local` :
+4.  **Générez une clé de compte de service Firebase** :
+    - Dans la console Firebase, allez dans les **Paramètres du projet** (icône d'engrenage en haut à gauche).
+    - Allez dans l'onglet **Comptes de service**.
+    - Cliquez sur le bouton **"Générer une nouvelle clé privée"**.
+    - Un fichier JSON sera téléchargé. **Traitez ce fichier comme un mot de passe, ne le partagez jamais et ne le commitez pas dans Git.**
+
+5.  Ouvrez le fichier JSON téléchargé et copiez les valeurs `project_id`, `client_email`, et `private_key`.
+
+6.  Ajoutez ces valeurs dans votre fichier `.env.local` comme ceci :
     ```env
-    NEXT_PUBLIC_FIREBASE_API_KEY=AIza...
-    NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
-    NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
-    NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
-    NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
-    NEXT_PUBLIC_FIREBASE_APP_ID=1:...:web:...
+    FIREBASE_PROJECT_ID="votre-project-id"
+    FIREBASE_CLIENT_EMAIL="votre-compte-de-service@...iam.gserviceaccount.com"
+    FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...votre-clé-privée...\n-----END PRIVATE KEY-----\n"
     ```
+    **Important pour `FIREBASE_PRIVATE_KEY`** : Assurez-vous de bien copier toute la clé, y compris `-----BEGIN PRIVATE KEY-----` et `-----END PRIVATE KEY-----`, et de conserver les `\n` pour les sauts de ligne. Le plus simple est de mettre la valeur entre guillemets.
 
 ### 4. Lancer le serveur de développement
 
@@ -81,7 +96,7 @@ L'application sera disponible à l'adresse [http://localhost:9002](http://localh
 
 ## Déploiement
 
-Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**.
+Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**. L'environnement de production n'utilise pas les clés du fichier `.env.local` ; il s'authentifie automatiquement et de manière sécurisée.
 
 1.  Assurez-vous d'avoir la [Firebase CLI](https://firebase.google.com/docs/cli) installée et connectée à votre compte Google.
 
