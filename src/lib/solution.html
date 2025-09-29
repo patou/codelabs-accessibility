@@ -37,7 +37,7 @@
           </button>
           <div id="accordion-content-1" class="accordion-content" hidden>
             <p>L'événement a lieu à l'agence nantaise de Zenika, idéalement située en centre ville.</p>
-            <img src="/map.png" alt="Carte montrant l'emplacement de l'agence Zenika à Nantes.">
+            <img src="/map.png" alt="">
           </div>
         </div>
         <div class="accordion-item">
@@ -64,8 +64,8 @@
         <h2 id="programme-title"><b>Sessions à la une</b></h2>
       
         <div class="schedule-grid">
-          <article class="session clearfix">
-            <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris">
+          <article class="session clearfix" tabindex="0">
+            <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris" tabindex="1">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             </button>
             <img src="https://picsum.photos/id/48/100/100" alt="">
@@ -73,8 +73,8 @@
             <p>Intervenant : <i>Patrice de Saint Steban</i></p>
             <p>Découvrez pourquoi l'accessibilité n'est pas une réflexion après coup et comment créer des applications web inclusives dès le départ.</p>
           </article>
-          <article class="session clearfix">
-             <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris">
+          <article class="session clearfix" tabindex="0">
+             <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris" tabindex="1">
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             </button>
             <img src="https://picsum.photos/id/60/100/100" alt="">
@@ -101,20 +101,20 @@
         </div>
       </section>
       
-      <section class="form-section" aria-labelledby="inscription-title">
+      <section id="inscription" class="form-section" aria-labelledby="inscription-title">
         <h2 id="inscription-title">Inscrivez-vous à l'événement</h2>
         <form onsubmit="validateForm(event)">
             <div class="form-fields">
+              <label class="form-label">Nom
+                <input id="form-nom" type="text" autocomplete="family-name">
+              </label>
+              <label class="form-label">Email
+                <input id="form-email" type="email" autocomplete="email">
+              </label>
               <div>
-                <label class="form-label" for="form-nom">Nom</label>
-                <input type="text" id="form-nom" autocomplete="family-name" tabindex="1">
-                
-                <label class="form-label" for="form-email">Email</label>
-                <input type="email" id="form-email" autocomplete="email" tabindex="3">
-              </div>
-              <div>
-                <label class="form-label" for="form-prenom">Prénom</label>
-                <input type="text" id="form-prenom" autocomplete="given-name" tabindex="2">
+                <label class="form-label" for="form-prenom">Prénom
+                  <input id="form-prenom" type="text" autocomplete="given-name">
+                  </label>
               </div>
             </div>
             <div id="form-error" class="form-error" role="alert" aria-live="assertive"></div>
@@ -128,16 +128,16 @@
     <h2 id="sponsors-title">Sponsorisé par</h2>
     <div class="logo-list">
       <a href="https://zenika.com" target="_blank" rel="noopener noreferrer">
-        <img src="/logo_zenika.svg" class="logo" alt="Logo de Zenika">
+        <img src="/logo_zenika.svg" class="logo" alt="Zenika">
       </a>
       <a href="https://play.google.com/store/apps/details?id=zigotote.barbu_score" target="_blank" rel="noopener noreferrer">
-        <img src="/logo_barbu.png" class="logo" alt="Logo de l'application Score Barbu">
+        <img src="/logo_barbu.png" class="logo" alt="Application Score Barbu">
       </a>
     </div>
   </aside>
 
   <footer class="footer">
-    <p>&copy; 2024 Conférence Web <abbr title="Accessibilité">A11y</abbr>. Tous droits réservés.</p>
+    <p aria-label="Copyright 2025 Conférence Web Accessibilité. Tous droits réservés">&copy; 2025 Conférence Web <abbr title="Accessibilité">A11y</abbr>. Tous droits réservés.</p>
   </footer>
 
   <div id="snackbar" role="status" aria-live="polite">Votre inscription a bien été validée !</div>
@@ -161,7 +161,9 @@
       const errorDiv = document.getElementById('form-error');
 
       if (nom.trim() === '' || prenom.trim() === '' || email.trim() === '') {
-        errorDiv.textContent = 'Veuillez remplir tous les champs.';
+        const errorText = 'Veuillez remplir tous les champs.'
+        errorDiv.textContent = errorText;
+        errorDiv.setAttribute('aria-label', `Erreur : {$errorText}`);
       } else {
         errorDiv.textContent = '';
         var snackbar = document.getElementById("snackbar");
@@ -171,7 +173,6 @@
         document.getElementById('form-prenom').value = '';
         document.getElementById('form-email').value = '';
       }
-    }
 
     document.querySelectorAll('.accordion-header').forEach(button => {
         button.addEventListener('click', () => {
