@@ -13,6 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { QRCodeCanvas } from 'qrcode.react';
 
 export function SolutionView({ content }: { content: string }) {
@@ -36,42 +42,58 @@ export function SolutionView({ content }: { content: string }) {
           <h1 className="text-lg font-semibold">Solution Accessible</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Link href="/" passHref>
-            <Button variant="outline" size="sm">
-              <Home className="mr-2 h-4 w-4" />
-              Retour à l'éditeur
-            </Button>
-          </Link>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
-                <QrCode className="mr-2 h-4 w-4" />
-                Vue Mobile
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Voir sur Mobile</DialogTitle>
-              </DialogHeader>
-              <div className="flex flex-col items-center justify-center gap-4 p-4">
-                <p className="text-center text-muted-foreground">Scannez ce code QR avec votre appareil mobile pour voir un aperçu en direct de la page de solution.</p>
-                {qrUrl ? (
-                  <div className="p-4 bg-white rounded-lg flex items-center justify-center">
-                    <QRCodeCanvas value={qrUrl} size={200} bgColor="#ffffff" fgColor="#000000" />
-                  </div>
-                ) : (
-                  <Skeleton className="w-[232px] h-[232px]" />
-                )}
-                 {qrUrl ? (
-                  <a href={qrUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all max-w-full text-center">
-                    {qrUrl}
-                  </a>
-                ) : (
-                  <Skeleton className="h-4 w-full max-w-xs" />
-                )}
-              </div>
-            </DialogContent>
-          </Dialog>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href="/" passHref>
+                  <Button variant="outline" size="sm" className="p-2 md:px-3">
+                    <Home className="h-4 w-4 md:mr-2" />
+                    <span className="hidden md:inline">Retour à l'éditeur</span>
+                  </Button>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent className="md:hidden">
+                <p>Retour à l'éditeur</p>
+              </TooltipContent>
+            </Tooltip>
+            <Dialog>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm" className="p-2 md:px-3">
+                      <QrCode className="h-4 w-4 md:mr-2" />
+                      <span className="hidden md:inline">Vue Mobile</span>
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent className="md:hidden">
+                  <p>Vue Mobile</p>
+                </TooltipContent>
+              </Tooltip>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Voir sur Mobile</DialogTitle>
+                </DialogHeader>
+                <div className="flex flex-col items-center justify-center gap-4 p-4">
+                  <p className="text-center text-muted-foreground">Scannez ce code QR avec votre appareil mobile pour voir un aperçu en direct de la page de solution.</p>
+                  {qrUrl ? (
+                    <div className="p-4 bg-white rounded-lg flex items-center justify-center">
+                      <QRCodeCanvas value={qrUrl} size={200} bgColor="#ffffff" fgColor="#000000" />
+                    </div>
+                  ) : (
+                    <Skeleton className="w-[232px] h-[232px]" />
+                  )}
+                   {qrUrl ? (
+                    <a href={qrUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline break-all max-w-full text-center">
+                      {qrUrl}
+                    </a>
+                  ) : (
+                    <Skeleton className="h-4 w-full max-w-xs" />
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+          </TooltipProvider>
         </div>
       </header>
       <div className="flex flex-1 flex-col md:flex-row min-h-0">
