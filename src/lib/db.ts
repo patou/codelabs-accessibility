@@ -1,16 +1,18 @@
 import * as admin from 'firebase-admin';
 
-// Initialise Firebase Admin
-// Si les variables d'environnement de Google Cloud sont définies (comme sur App Hosting),
-// le SDK les utilisera automatiquement.
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-
-const db = admin.firestore();
-
 // Collection Firestore où les documents HTML seront stockés
 const HTML_COLLECTION = 'html_documents';
+
+/**
+ * Initialise Firebase Admin si ce n'est pas déjà fait et retourne l'instance de Firestore.
+ * Cela évite les initialisations multiples en environnement de développement avec rechargement à chaud.
+ */
+function getFirestoreInstance() {
+  if (!admin.apps.length) {
+    admin.initializeApp();
+  }
+  return admin.firestore();
+}
 
 /**
  * Récupère le contenu HTML depuis Firestore.
@@ -18,11 +20,13 @@ const HTML_COLLECTION = 'html_documents';
  * @returns Le contenu HTML sous forme de chaîne de caractères.
  */
 export async function getHtmlFromDb(id: string): Promise<string | null> {
+  const db = getFirestoreInstance();
   const docRef = db.collection(HTML_COLLECTION).doc(id);
   const docSnap = await docRef.get();
 
   if (docSnap.exists) {
-    return docSnap.data()?.content;
+    // Le 'content' peut être undefined si le document est vide.
+    return docSnap.data()?.content ?? null;
   } else {
     return null;
   }
@@ -34,6 +38,7 @@ export async function getHtmlFromDb(id: string): Promise<string | null> {
  * @param content Le contenu HTML à sauvegarder.
  */
 export async function saveHtmlToDb(id: string, content: string): Promise<void> {
+  const db = getFirestoreInstance();
   const docRef = db.collection(HTML_COLLECTION).doc(id);
   await docRef.set({ content }, { merge: true });
 }
