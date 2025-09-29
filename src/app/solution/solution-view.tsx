@@ -119,7 +119,7 @@ export function SolutionView({ content }: { content: string }) {
             <iframe
               src={previewUrl}
               title="Aperçu de la solution accessible"
-              sandbox="allow-scripts allow-same-origin"
+              sandbox="allow-scripts allow-same-origin allow-forms"
               className="w-full h-full border-0"
             />
           ) : (
