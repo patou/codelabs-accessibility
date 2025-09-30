@@ -52,7 +52,37 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
 
 ### 3. Configuration de l'environnement local
 
-1.  Clonez le dépôt :
+Pour que l'application puisse s'authentifier auprès de Firebase en local, vous devez utiliser une clé de compte de service et définir une variable d'environnement.
+
+1.  **Générez une clé de compte de service Firebase** :
+    - Dans la console Firebase, allez dans les **Paramètres du projet** (icône d'engrenage).
+    - Allez dans l'onglet **Comptes de service**.
+    - Cliquez sur le bouton **"Générer une nouvelle clé privée"**.
+    - Un fichier JSON sera téléchargé. **Conservez ce fichier dans un endroit sûr et ne le partagez jamais.**
+
+2.  **Définissez la variable d'environnement `GOOGLE_APPLICATION_CREDENTIALS`** :
+    - Cette variable doit contenir le chemin **absolu** vers le fichier JSON que vous venez de télécharger.
+    - **Sur macOS/Linux :**
+      - Ouvrez votre terminal.
+      - Éditez votre fichier de profil de shell (ex: `~/.bash_profile`, `~/.zshrc`).
+      - Ajoutez la ligne suivante en remplaçant `/path/to/your/keyfile.json` par le chemin réel :
+        ```bash
+        export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/keyfile.json"
+        ```
+      - Rechargez votre terminal ou exécutez `source ~/.your_profile_file`.
+    - **Sur Windows (PowerShell) :**
+      - Ouvrez une nouvelle fenêtre PowerShell en tant qu'administrateur.
+      - Exécutez la commande suivante en remplaçant `C:\path\to\your\keyfile.json` :
+        ```powershell
+        [System.Environment]::SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "C:\path\to\your\keyfile.json", "Machine")
+        ```
+      - Redémarrez votre terminal pour que les changements prennent effet.
+
+    **Note :** N'ajoutez PAS ce fichier à votre projet et ne le commitez jamais sur Git. La variable d'environnement est une manière sécurisée de le rendre accessible à votre application locale.
+
+### 4. Lancer le serveur de développement
+
+1.  Clonez le dépôt (si ce n'est pas déjà fait) :
     ```bash
     git clone <url-du-repo>
     cd <nom-du-repo>
@@ -63,29 +93,16 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
     npm install
     ```
 
-3.  **Générez une clé de compte de service Firebase** :
-    - Dans la console Firebase, allez dans les **Paramètres du projet** (icône d'engrenage en haut à gauche).
-    - Allez dans l'onglet **Comptes de service**.
-    - Cliquez sur le bouton **"Générer une nouvelle clé privée"**.
-    - Un fichier JSON sera téléchargé. **Traitez ce fichier comme un mot de passe, ne le partagez jamais et ne le commitez pas dans Git.**
+3.  Lancez le serveur de développement :
+    ```bash
+    npm run dev
+    ```
 
-4.  **Placez la clé à la racine du projet** :
-    - Renommez le fichier JSON téléchargé en `firebase-service-account.json`.
-    - Placez ce fichier à la racine de votre projet. Le fichier `.gitignore` est déjà configuré pour l'ignorer.
-
-### 4. Lancer le serveur de développement
-
-Une fois l'environnement configuré, lancez le serveur :
-
-```bash
-npm run dev
-```
-
-L'application sera disponible à l'adresse [http://localhost:9002](http://localhost:9002).
+L'application sera disponible à l'adresse [http://localhost:9002](http://localhost:9002). Si la variable d'environnement est correctement configurée, l'application devrait se connecter à Firestore.
 
 ## Déploiement
 
-Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**. L'environnement de production s'authentifie automatiquement de manière sécurisée et n'utilise pas le fichier de clé de service local.
+Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hosting**. En production, le SDK Admin détecte automatiquement les identifiants de l'environnement de manière sécurisée, sans avoir besoin de la variable d'environnement locale.
 
 1.  Assurez-vous d'avoir la [Firebase CLI](https://firebase.google.com/docs/cli) installée et connectée à votre compte Google.
 
@@ -99,4 +116,4 @@ Ce projet est pré-configuré pour un déploiement facile sur **Firebase App Hos
     firebase apphosting:backends:deploy
     ```
 
-Suivez les instructions de la CLI pour sélectionner le backend et la région. Une fois le déploiement terminé, votre application sera accessible via l'URL fournie par Firebase.
+Suivez les instructions de la CLI pour sélectionner le backend et la région.
