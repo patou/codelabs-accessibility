@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Code, Home, QrCode, GraduationCap } from 'lucide-react';
+import { Code, Home, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import {
@@ -54,20 +54,6 @@ export function SolutionView({ content }: { content: string }) {
               </TooltipTrigger>
               <TooltipContent className="md:hidden">
                 <p>Retour à l'éditeur</p>
-              </TooltipContent>
-            </Tooltip>
-            
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link href="/tutorial" passHref>
-                  <Button variant="outline" size="sm" className="p-2 md:px-3">
-                    <GraduationCap className="h-4 w-4 md:mr-2" />
-                    <span className="hidden md:inline">Retour au tutoriel</span>
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent className="md:hidden">
-                <p>Retour au tutoriel</p>
               </TooltipContent>
             </Tooltip>
 

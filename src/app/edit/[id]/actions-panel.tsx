@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/tooltip';
 import { Code, QrCode, Save, Loader2, PlusSquare, GraduationCap } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import { TutorialSheet } from './tutorial-sheet';
 
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
@@ -102,19 +103,7 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
             </AlertDialogContent>
           </AlertDialog>
           
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href="/tutorial" passHref>
-                <Button variant="outline" size="sm" className="p-2 md:px-3">
-                  <GraduationCap className="h-4 w-4 md:mr-2" />
-                  <span className="hidden md:inline">Tutoriel</span>
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent className="md:hidden">
-              <p>Tutoriel</p>
-            </TooltipContent>
-          </Tooltip>
+          <TutorialSheet />
 
           <Dialog>
             <Tooltip>

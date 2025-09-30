@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,7 +10,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { ArrowLeft, CheckCircle, Code } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { ArrowLeft, CheckCircle, Code, GraduationCap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const tutorialSteps = [
@@ -60,78 +75,87 @@ const tutorialSteps = [
   },
 ];
 
-export default function TutorialPage() {
+
+export function TutorialSheet() {
   return (
-    <div className="flex flex-col h-screen bg-background">
-      <header className="flex items-center p-4 border-b bg-card text-card-foreground">
-        <Link href="/edit/new" passHref>
-          <Button variant="outline">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour à l'éditeur
-          </Button>
-        </Link>
-        <div className="flex-1 text-center">
-          <h1 className="text-xl font-bold">Tutoriel d'Accessibilité</h1>
-          <p className="text-muted-foreground">Comment rendre votre page web accessible, étape par étape.</p>
-        </div>
-        <div className="w-36"></div>
-      </header>
-      <ScrollArea className="flex-1">
-        <div className="container mx-auto py-8 px-4">
-          <div className="grid gap-6">
-            {tutorialSteps.map((step, index) => (
-              <Card key={index} className="overflow-hidden">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <CheckCircle className="text-primary" />
-                    {step.title}
-                  </CardTitle>
-                  <CardDescription>{step.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {step.changes.map((change, changeIndex) => (
-                      <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                          <div>
-                            <p className="font-semibold text-destructive mb-1">Avant :</p>
-                            <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block whitespace-pre-wrap">{change.before}</code>
+    <Sheet>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="p-2 md:px-3">
+                        <GraduationCap className="h-4 w-4 md:mr-2" />
+                        <span className="hidden md:inline">Tutoriel</span>
+                    </Button>
+                </SheetTrigger>
+            </TooltipTrigger>
+            <TooltipContent className="md:hidden">
+                <p>Tutoriel</p>
+            </TooltipContent>
+        </Tooltip>
+      <SheetContent className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0">
+        <SheetHeader className="p-6 pb-0">
+          <SheetTitle className="text-xl">Tutoriel d'Accessibilité</SheetTitle>
+          <SheetDescription>
+            Comment rendre votre page web accessible, étape par étape.
+          </SheetDescription>
+        </SheetHeader>
+        <ScrollArea className="h-[calc(100vh-4rem)]">
+          <div className="px-6 py-8">
+            <div className="grid gap-6">
+              {tutorialSteps.map((step, index) => (
+                <Card key={index} className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <CheckCircle className="text-primary" />
+                      {step.title}
+                    </CardTitle>
+                    <CardDescription>{step.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {step.changes.map((change, changeIndex) => (
+                        <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                            <div>
+                              <p className="font-semibold text-destructive mb-1">Avant :</p>
+                              <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block whitespace-pre-wrap">{change.before}</code>
+                            </div>
+                            <div>
+                              <p className="font-semibold text-green-600 mb-1">Après :</p>
+                              <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block whitespace-pre-wrap">{change.after}</code>
+                            </div>
                           </div>
-                          <div>
-                            <p className="font-semibold text-green-600 mb-1">Après :</p>
-                            <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block whitespace-pre-wrap">{change.after}</code>
-                          </div>
+                          <p className="mt-3 text-sm text-muted-foreground">
+                            <span className="font-semibold">Pourquoi ?</span> {change.explanation}
+                          </p>
                         </div>
-                        <p className="mt-3 text-sm text-muted-foreground">
-                          <span className="font-semibold">Pourquoi ?</span> {change.explanation}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-             <Card>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Card>
                 <CardHeader>
-                    <CardTitle>Voir la solution complète</CardTitle>
-                    <CardDescription>
-                        Vous avez terminé le tutoriel ? Comparez votre travail avec la solution finale entièrement accessible.
-                    </CardDescription>
+                  <CardTitle>Voir la solution complète</CardTitle>
+                  <CardDescription>
+                    Vous avez terminé le tutoriel ? Comparez votre travail avec la solution finale entièrement accessible.
+                  </CardDescription>
                 </CardHeader>
                 <CardFooter className="flex justify-center">
-                    <Link href="/solution" passHref>
-                        <Button size="lg">
-                        <Code className="mr-2 h-5 w-5" />
-                        Voir le code de la solution
-                        </Button>
-                    </Link>
+                  <Link href="/solution" passHref>
+                    <Button size="lg">
+                      <Code className="mr-2 h-5 w-5" />
+                      Voir le code de la solution
+                    </Button>
+                  </Link>
                 </CardFooter>
-             </Card>
+              </Card>
+            </div>
           </div>
-        </div>
-      </ScrollArea>
-    </div>
+        </ScrollArea>
+      </SheetContent>
+    </Sheet>
   );
 }
