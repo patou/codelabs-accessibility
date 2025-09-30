@@ -5,7 +5,7 @@ import Editor from '@monaco-editor/react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Code, Home, QrCode } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,7 @@ import { QRCodeCanvas } from 'qrcode.react';
 export function SolutionView({ content }: { content: string }) {
   const [isMounted, setIsMounted] = useState(false);
   const [qrUrl, setQrUrl] = useState('');
+  const router = useRouter();
 
   const previewUrl = '/view/solution';
 
@@ -45,12 +46,15 @@ export function SolutionView({ content }: { content: string }) {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Link href="/" passHref>
-                  <Button variant="outline" size="sm" className="p-2 md:px-3">
-                    <Home className="h-4 w-4 md:mr-2" />
-                    <span className="hidden md:inline">Retour à l'éditeur</span>
-                  </Button>
-                </Link>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="p-2 md:px-3"
+                  onClick={() => router.back()}
+                >
+                  <Home className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Retour à l'éditeur</span>
+                </Button>
               </TooltipTrigger>
               <TooltipContent className="md:hidden">
                 <p>Retour à l'éditeur</p>
