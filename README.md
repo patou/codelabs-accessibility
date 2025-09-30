@@ -52,33 +52,30 @@ Ce projet nécessite une connexion à un projet Firebase pour la persistance des
 
 ### 3. Configuration de l'environnement local
 
-Pour que l'application puisse s'authentifier auprès de Firebase en local, vous devez utiliser une clé de compte de service et définir une variable d'environnement.
+Pour que l'application puisse s'authentifier auprès de Firebase en local, vous devez utiliser une clé de compte de service via un fichier `.env.local`.
 
 1.  **Générez une clé de compte de service Firebase** :
     - Dans la console Firebase, allez dans les **Paramètres du projet** (icône d'engrenage).
     - Allez dans l'onglet **Comptes de service**.
     - Cliquez sur le bouton **"Générer une nouvelle clé privée"**.
-    - Un fichier JSON sera téléchargé. **Conservez ce fichier dans un endroit sûr et ne le partagez jamais.**
+    - Un fichier JSON sera téléchargé (par exemple, `votre-projet-firebase-adminsdk-xxxxx-xxxxxxxxxx.json`). **Conservez ce fichier dans un endroit sûr.**
 
-2.  **Définissez la variable d'environnement `GOOGLE_APPLICATION_CREDENTIALS`** :
-    - Cette variable doit contenir le chemin **absolu** vers le fichier JSON que vous venez de télécharger.
-    - **Sur macOS/Linux :**
-      - Ouvrez votre terminal.
-      - Éditez votre fichier de profil de shell (ex: `~/.bash_profile`, `~/.zshrc`).
-      - Ajoutez la ligne suivante en remplaçant `/path/to/your/keyfile.json` par le chemin réel :
-        ```bash
-        export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/keyfile.json"
-        ```
-      - Rechargez votre terminal ou exécutez `source ~/.your_profile_file`.
-    - **Sur Windows (PowerShell) :**
-      - Ouvrez une nouvelle fenêtre PowerShell en tant qu'administrateur.
-      - Exécutez la commande suivante en remplaçant `C:\path\to\your\keyfile.json` :
-        ```powershell
-        [System.Environment]::SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", "C:\path\to\your\keyfile.json", "Machine")
-        ```
-      - Redémarrez votre terminal pour que les changements prennent effet.
+2.  **Créez un fichier `.env.local`** :
+    - À la racine de votre projet, créez un nouveau fichier nommé `.env.local`.
+    - Ajoutez la ligne suivante dans ce fichier, en remplaçant `/path/to/your/keyfile.json` par le chemin **absolu** vers le fichier JSON que vous venez de télécharger :
+      ```
+      GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/keyfile.json"
+      ```
+    - **Exemple sur macOS/Linux :**
+      ```
+      GOOGLE_APPLICATION_CREDENTIALS="/Users/mon-nom/Documents/cles-firebase/votre-projet-adminsdk.json"
+      ```
+    - **Exemple sur Windows :**
+      ```
+      GOOGLE_APPLICATION_CREDENTIALS="C:\Users\MonNom\Documents\cles-firebase\votre-projet-adminsdk.json"
+      ```
 
-    **Note :** N'ajoutez PAS ce fichier à votre projet et ne le commitez jamais sur Git. La variable d'environnement est une manière sécurisée de le rendre accessible à votre application locale.
+    **Note :** Le fichier `.env.local` est déjà listé dans `.gitignore`, donc il ne sera pas ajouté à votre dépôt Git. C'est la manière sécurisée de gérer les secrets en local avec Next.js.
 
 ### 4. Lancer le serveur de développement
 
@@ -98,7 +95,7 @@ Pour que l'application puisse s'authentifier auprès de Firebase en local, vous 
     npm run dev
     ```
 
-L'application sera disponible à l'adresse [http://localhost:9002](http://localhost:9002). Si la variable d'environnement est correctement configurée, l'application devrait se connecter à Firestore.
+L'application sera disponible à l'adresse [http://localhost:9002](http://localhost:9002). Next.js chargera automatiquement la variable d'environnement depuis `.env.local`, et le SDK Admin Firebase s'authentifiera avec succès.
 
 ## Déploiement
 
