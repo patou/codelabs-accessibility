@@ -33,6 +33,8 @@ import { Code, QrCode, Save, Loader2, PlusSquare, GraduationCap } from 'lucide-r
 import { Skeleton } from '@/components/ui/skeleton';
 import { TutorialSheet } from './tutorial-sheet';
 
+const LOCAL_STORAGE_KEY = 'codelabs-a11y-latest-id';
+
 export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean }) {
   const [qrUrl, setQrUrl] = useState('');
   const router = useRouter();
@@ -40,6 +42,8 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
   useEffect(() => {
     if (typeof window !== 'undefined') {
       setQrUrl(`${window.location.origin}/view/${id}`);
+      // Also, ensure the current ID is stored as the latest one.
+      localStorage.setItem(LOCAL_STORAGE_KEY, id);
     }
   }, [id]);
 
@@ -48,6 +52,10 @@ export function ActionsPanel({ id, content, isSaving }: { id: string; content: s
     const array = new Uint8Array(8);
     window.crypto.getRandomValues(array);
     const newId = Array.from(array, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    
+    // Save the new ID to local storage before navigating.
+    localStorage.setItem(LOCAL_STORAGE_KEY, newId);
+    
     router.push(`/edit/${newId}`);
   };
 
