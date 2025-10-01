@@ -145,7 +145,7 @@
       const isFavorited = button.classList.contains('favorited');
       const sessionTitle = button.closest('article').querySelector('h3').textContent;
       if (isFavorited) {
-        button.setAttribute('atitle', `Retirer la session '${sessionTitle}' des favoris`);
+        button.setAttribute('title', `Retirer la session '${sessionTitle}' des favoris`);
       } else {
         button.setAttribute('title', `Ajouter la session '${sessionTitle}' aux favoris`);
       }
