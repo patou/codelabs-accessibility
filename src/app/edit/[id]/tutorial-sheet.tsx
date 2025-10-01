@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -59,7 +60,7 @@ const tutorialSteps = [
     changes: [
       { before: '<div class="accordion-item">', after: 'Utilisation de `aria-expanded`, `aria-controls`, `hidden`', explanation: 'L\'accordéon doit indiquer son état (ouvert/fermé) avec `aria-expanded` et lier le bouton à son contenu avec `aria-controls`.' },
       { before: '<div class="favorite-btn">', after: '<button class="favorite-btn">', explanation: 'Remplacer les `div` cliquables par des `<button>`, qui sont nativement accessibles au clavier et sémantiques.' },
-      { before: '<button ...>Favori</button>', after: '<button aria-label="Ajouter ... aux favoris">', explanation: 'Utiliser `aria-label` sur les boutons icônes pour fournir une description textuelle claire de leur action.' },
+      { before: '<button ...>Favori</button>', after: '<button title="Ajouter ... aux favoris">', explanation: 'Utiliser `title` sur les boutons icônes pour fournir une description textuelle claire de leur action.' },
       { before: '<div class="session">', after: '<article class="session" tabindex="0">', explanation: 'Rendre les cartes de session focalisables avec `tabindex="0"` pour que les utilisateurs au clavier puissent y naviguer.' },
     ],
   },
@@ -118,11 +119,11 @@ export function TutorialSheet() {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                             <div>
                               <p className="font-semibold text-destructive mb-1">Avant :</p>
-                              <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block whitespace-pre-wrap">{change.before}</code>
+                              <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto">{change.before}</code>
                             </div>
                             <div>
                               <p className="font-semibold text-green-600 mb-1">Après :</p>
-                              <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block whitespace-pre-wrap">{change.after}</code>
+                              <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto">{change.after}</code>
                             </div>
                           </div>
                           <p className="mt-3 text-sm text-muted-foreground">

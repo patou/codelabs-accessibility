@@ -65,8 +65,8 @@
       
         <div class="schedule-grid">
           <article class="session clearfix" tabindex="0">
-            <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris" tabindex="1">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris" tabindex="1">
+              <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             </button>
             <img src="https://picsum.photos/id/48/100/100" alt="">
             <h3>L'approche "L'accessibilité d'abord"</h3>
@@ -74,8 +74,8 @@
             <p>Découvrez pourquoi l'accessibilité n'est pas une réflexion après coup et comment créer des applications web inclusives dès le départ.</p>
           </article>
           <article class="session clearfix" tabindex="0">
-             <button class="favorite-btn" onclick="toggleFavorite(this)" aria-label="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris" tabindex="1">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+             <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris" tabindex="1">
+              <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
             </button>
             <img src="https://picsum.photos/id/60/100/100" alt="">
             <h3>Navigation au clavier et lecteurs d'écran</h3>
@@ -145,9 +145,9 @@
       const isFavorited = button.classList.contains('favorited');
       const sessionTitle = button.closest('article').querySelector('h3').textContent;
       if (isFavorited) {
-        button.setAttribute('aria-label', `Retirer la session '${sessionTitle}' des favoris`);
+        button.setAttribute('atitle', `Retirer la session '${sessionTitle}' des favoris`);
       } else {
-        button.setAttribute('aria-label', `Ajouter la session '${sessionTitle}' aux favoris`);
+        button.setAttribute('title', `Ajouter la session '${sessionTitle}' aux favoris`);
       }
     }
 
