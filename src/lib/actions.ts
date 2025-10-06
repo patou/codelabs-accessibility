@@ -6,28 +6,16 @@ import { getInitialHtml, getSolutionHtml as readSolutionHtml } from './initial-h
 import { notFound } from 'next/navigation';
 
 export async function getHtml(id: string): Promise<string> {
-  try {
-    const content = await getHtmlFromDb(id);
-    // Si le contenu est trouvé, on le retourne
-    if (content !== null) {
-      return content;
-    }
-    
-    // Si le document n'existe pas en base, on utilise le contenu initial...
-    const initialContent = await getInitialHtml();
-    // ... et on essaie de le sauvegarder pour la prochaine fois, sans bloquer l'utilisateur.
-    // Cette opération peut échouer si le client est hors ligne, mais ce n'est pas grave.
-    await saveHtmlToDb(id, initialContent).catch(e => {
-        console.warn(`Impossible de faire la sauvegarde initiale pour l'ID ${id}. Le client est peut-être hors ligne.`, e);
-    });
-    return initialContent;
+  const content = await getHtmlFromDb(id);
 
-  } catch (error) {
-    // Si une erreur se produit pendant la récupération (par ex. client hors ligne),
-    // on retourne le HTML initial par défaut pour éviter de planter l'application.
-    console.warn(`Impossible de récupérer le HTML pour l'ID ${id} depuis la base de données. Retour au contenu par défaut. Erreur:`, error);
-    return getInitialHtml();
+  // Si le contenu est trouvé en base, on le retourne.
+  if (content !== null) {
+    return content;
   }
+  
+  // Sinon (document non trouvé ou erreur DB), on retourne le contenu initial par défaut.
+  // La sauvegarde ne se fera que lors de la première modification dans l'éditeur.
+  return getInitialHtml();
 }
 
 export async function saveHtml(id: string, content: string): Promise<{ success: boolean; error?: string }> {
