@@ -21,6 +21,17 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
+function isValidHtml(html: string): boolean {
+  if (typeof DOMParser === 'undefined') {
+    // Assume valid on the server or in environments without DOMParser
+    return true;
+  }
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  // If the parser encounters a syntax error, it will add a <parsererror> element.
+  return doc.getElementsByTagName('parsererror').length === 0;
+}
+
 export function EditorView({ id, initialContent }: { id: string; initialContent: string }) {
   const [content, setContent] = useState(initialContent);
   const debouncedContent = useDebounce(content, 500);
@@ -48,8 +59,8 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   }, []);
 
   useEffect(() => {
-    // Only save if the content has changed from the initial state
-    if (isMounted && debouncedContent !== initialContent) {
+    // Only save if the content has changed and is valid HTML
+    if (isMounted && debouncedContent !== initialContent && isValidHtml(debouncedContent)) {
       startSaveTransition(async () => {
         const result = await saveHtml(id, debouncedContent);
         if (result.error) {
