@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor, { useMonaco } from '@monaco-editor/react';
 import { saveHtml } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,17 +21,6 @@ function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-function isValidHtml(html: string): boolean {
-  if (typeof DOMParser === 'undefined') {
-    // Assume valid on the server or in environments without DOMParser
-    return true;
-  }
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, "text/html");
-  // If the parser encounters a syntax error, it will add a <parsererror> element.
-  return doc.getElementsByTagName('parsererror').length === 0;
-}
-
 export function EditorView({ id, initialContent }: { id: string; initialContent: string }) {
   const [content, setContent] = useState(initialContent);
   const debouncedContent = useDebounce(content, 500);
@@ -39,6 +28,7 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
+  const [isHtmlValid, setIsHtmlValid] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
@@ -59,8 +49,8 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   }, []);
 
   useEffect(() => {
-    // Only save if the content has changed and is valid HTML
-    if (isMounted && debouncedContent !== initialContent && isValidHtml(debouncedContent)) {
+    // Only save if content has changed and is valid
+    if (isMounted && debouncedContent !== initialContent && isHtmlValid) {
       startSaveTransition(async () => {
         const result = await saveHtml(id, debouncedContent);
         if (result.error) {
@@ -75,9 +65,15 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
         }
       });
     }
-  }, [debouncedContent, id, toast, isMounted, initialContent]);
+  }, [debouncedContent, id, toast, isMounted, initialContent, isHtmlValid]);
 
   const previewUrl = `/view/${id}`;
+
+  const handleEditorValidation = (markers: any[]) => {
+    // A marker with severity 8 is an error.
+    const hasErrors = markers.some(m => m.severity === 8);
+    setIsHtmlValid(!hasErrors);
+  };
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -90,6 +86,7 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
             theme="vs-dark"
             value={content}
             onChange={(value) => setContent(value || '')}
+            onValidate={handleEditorValidation}
             loading={<Skeleton className="w-full h-full" />}
             options={{
               minimap: { enabled: false },
