@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect, useTransition } from 'react';
-import Editor, { useMonaco } from '@monaco-editor/react';
+import Editor from '@monaco-editor/react';
 import { saveHtml } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -77,7 +77,7 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
 
   return (
     <div className="flex flex-col h-full w-full">
-      <ActionsPanel id={id} content={content} isSaving={isSaving} />
+      <ActionsPanel id={id} content={content} isSaving={isSaving} isHtmlValid={isHtmlValid} />
       <div className="flex flex-1 flex-col md:flex-row min-h-0">
         <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col border-t md:border-t-0 md:border-r">
           <Editor
