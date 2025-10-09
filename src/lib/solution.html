@@ -61,94 +61,27 @@
       </section>
       
       <section id="programme" aria-labelledby="programme-title">
-        <h2 id="programme-title">Programme de la journée</h2>
-        <div class="schedule-table">
-            <table aria-label="Programme de la conférence">
-              <thead>
-                <tr>
-                  <th scope="col">Heure</th>
-                  <th scope="col">Session</th>
-                  <th scope="col">Intervenant(e)</th>
-                  <th scope="col">Favoris</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">09:00 - 09:30</th>
-                  <td>Accueil et café</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <th scope="row">09:30 - 10:30</th>
-                  <td>L'approche "L'accessibilité d'abord"</td>
-                  <td>Patrice de Saint Steban</td>
-                  <td>
-                    <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris" tabindex="1">
-                      <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">10:30 - 11:00</th>
-                  <td>Pause café</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <th scope="row">11:00 - 12:00</th>
-                  <td>Navigation au clavier et lecteurs d'écran</td>
-                  <td>Océane Gillard</td>
-                  <td>
-                    <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris" tabindex="1">
-                      <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <th scope="row">12:00 - 13:30</th>
-                  <td>Déjeuner</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                    <th scope="row">13:30 - 14:30</th>
-                    <td>Contraste et couleurs : ne laissez personne de côté</td>
-                    <td>Alex Moreau</td>
-                    <td>
-                      <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Contraste et couleurs : ne laissez personne de côté' aux favoris" tabindex="1">
-                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                      </button>
-                    </td>
-                </tr>
-                <tr>
-                    <th scope="row">14:30 - 15:30</th>
-                    <td>Les formulaires accessibles : un guide pratique</td>
-                    <td>Camille Dupont</td>
-                    <td>
-                      <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Les formulaires accessibles : un guide pratique' aux favoris" tabindex="1">
-                        <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                      </button>
-                    </td>
-                </tr>
-                <tr>
-                  <th scope="row">15:30 - 16:00</th>
-                  <td>Pause</td>
-                  <td>-</td>
-                  <td>-</td>
-                </tr>
-                <tr>
-                  <th scope="row">16:00 - 17:00</th>
-                  <td>Table ronde : L'avenir de l'accessibilité</td>
-                  <td>Tous les intervenants</td>
-                  <td>
-                    <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Table ronde : L'avenir de l'accessibilité' aux favoris" tabindex="1">
-                      <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+        <h2 id="programme-title"><b>Sessions à la une</b></h2>
+      
+        <div class="schedule-grid">
+          <article class="session clearfix" tabindex="0">
+            <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'L'approche L'accessibilité d'abord' aux favoris" tabindex="1">
+              <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+            <img src="https://picsum.photos/id/48/100/100" alt="">
+            <h3>L'approche "L'accessibilité d'abord"</h3>
+            <p>Intervenant : <i>Patrice de Saint Steban</i></p>
+            <p>Découvrez pourquoi l'accessibilité n'est pas une réflexion après coup et comment créer des applications web inclusives dès le départ.</p>
+          </article>
+          <article class="session clearfix" tabindex="0">
+             <button class="favorite-btn" onclick="toggleFavorite(this)" title="Ajouter la session 'Navigation au clavier et lecteurs d'écran' aux favoris" tabindex="1">
+              <svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            </button>
+            <img src="https://picsum.photos/id/60/100/100" alt="">
+            <h3>Navigation au clavier et lecteurs d'écran</h3>
+            <p>Intervenante : <i>Océane Gillard</i></p>
+            <p>Maîtrisez les techniques pour rendre vos applications entièrement utilisables sans souris et parfaitement interprétables par les lecteurs d'écran.</p>
+          </article>
         </div>
       </section>
 
@@ -164,16 +97,6 @@
             <img src="https://picsum.photos/id/65/150/150" alt="Photo d'Océane Gillard.">
             <h3>Océane Gillard</h3>
             <p>Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
-          </article>
-          <article class="speaker-profile">
-            <img src="https://picsum.photos/id/602/150/150" alt="Photo d'Alex Moreau.">
-            <h3>Alex Moreau</h3>
-            <p>Spécialiste du design UI/UX, Alex montrera comment les choix de couleurs et de contrastes peuvent transformer l'expérience utilisateur pour les personnes malvoyantes.</p>
-          </article>
-          <article class="speaker-profile">
-            <img src="https://picsum.photos/id/628/150/150" alt="Photo de Camille Dupont.">
-            <h3>Camille Dupont</h3>
-            <p>Développeuse front-end, Camille décortiquera les meilleures pratiques pour créer des formulaires robustes, utilisables et accessibles à tous.</p>
           </article>
         </div>
       </section>
@@ -202,10 +125,10 @@
   <aside class="sponsors" aria-labelledby="sponsors-title">
     <h2 id="sponsors-title">Sponsorisé par</h2>
     <div class="logo-list">
-      <a href="https://zenika.com" target="\_blank" rel="noopener noreferrer">
+      <a href="https://zenika.com" target="_blank" rel="noopener noreferrer">
         <img src="/logo_zenika.svg" class="logo" alt="Zenika">
       </a>
-      <a href="https://play.google.com/store/apps/details?id=zigotote.barbu_score" target="\_blank" rel="noopener noreferrer">
+      <a href="https://play.google.com/store/apps/details?id=zigotote.barbu_score" target="_blank" rel="noopener noreferrer">
         <img src="/logo_barbu.png" class="logo" alt="Application Score Barbu">
       </a>
     </div>
@@ -238,7 +161,7 @@
       if (nom.trim() === '' || prenom.trim() === '' || email.trim() === '') {
         const errorText = 'Veuillez remplir tous les champs.'
         errorDiv.textContent = errorText;
-        errorDiv.setAttribute('aria-label', `Erreur : ${errorText}`);
+        errorDiv.setAttribute('aria-label', `Erreur : {$errorText}`);
       } else {
         errorDiv.textContent = '';
         var snackbar = document.getElementById("snackbar");

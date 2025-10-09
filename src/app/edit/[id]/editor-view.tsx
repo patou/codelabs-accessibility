@@ -23,7 +23,7 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export function EditorView({ id, initialContent }: { id: string; initialContent: string }) {
   const [content, setContent] = useState(initialContent);
-  const debouncedContent = useDebounce(content, 1000);
+  const debouncedContent = useDebounce(content, 500);
   const [isSaving, startSaveTransition] = useTransition();
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
