@@ -161,7 +161,7 @@
       if (nom.trim() === '' || prenom.trim() === '' || email.trim() === '') {
         const errorText = 'Veuillez remplir tous les champs.'
         errorDiv.textContent = errorText;
-        errorDiv.setAttribute('aria-label', `Erreur : {$errorText}`);
+        errorDiv.setAttribute('aria-label', `Erreur : ${errorText}`);
       } else {
         errorDiv.textContent = '';
         var snackbar = document.getElementById("snackbar");
