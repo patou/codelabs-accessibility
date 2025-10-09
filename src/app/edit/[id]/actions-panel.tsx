@@ -29,13 +29,13 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip';
-import { Code, QrCode, Save, Loader2, PlusSquare, GraduationCap, AlertCircle } from 'lucide-react';
+import { Code, QrCode, Save, Loader2, PlusSquare, GraduationCap } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { TutorialSheet } from './tutorial-sheet';
 
 const LOCAL_STORAGE_KEY = 'codelabs-a11y-latest-id';
 
-export function ActionsPanel({ id, content, isSaving, isHtmlValid }: { id: string; content: string; isSaving: boolean; isHtmlValid: boolean; }) {
+export function ActionsPanel({ id, content, isSaving }: { id: string; content: string; isSaving: boolean; }) {
   const [qrUrl, setQrUrl] = useState('');
   const router = useRouter();
 
@@ -67,12 +67,7 @@ export function ActionsPanel({ id, content, isSaving, isHtmlValid }: { id: strin
       </div>
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground mr-4">
-          {!isHtmlValid ? (
-            <div className="flex items-center gap-2 text-destructive">
-                <AlertCircle className="h-4 w-4" />
-                <span>Code invalide</span>
-            </div>
-          ) : isSaving ? (
+          {isSaving ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
               <span>Enregistrement...</span>

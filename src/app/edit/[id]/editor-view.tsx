@@ -28,7 +28,6 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
-  const [isHtmlValid, setIsHtmlValid] = useState(true);
 
   useEffect(() => {
     setIsMounted(true);
@@ -49,8 +48,8 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   }, []);
 
   useEffect(() => {
-    // Only save if content has changed and is valid
-    if (isMounted && debouncedContent !== initialContent && isHtmlValid) {
+    // Only save if content has changed
+    if (isMounted && debouncedContent !== initialContent) {
       startSaveTransition(async () => {
         const result = await saveHtml(id, debouncedContent);
         if (result.error) {
@@ -65,19 +64,13 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
         }
       });
     }
-  }, [debouncedContent, id, toast, isMounted, initialContent, isHtmlValid]);
+  }, [debouncedContent, id, toast, isMounted, initialContent]);
 
   const previewUrl = `/view/${id}`;
 
-  const handleEditorValidation = (markers: any[]) => {
-    // A marker with severity 8 is an error.
-    const hasErrors = markers.some(m => m.severity === 8);
-    setIsHtmlValid(!hasErrors);
-  };
-
   return (
     <div className="flex flex-col h-full w-full">
-      <ActionsPanel id={id} content={content} isSaving={isSaving} isHtmlValid={isHtmlValid} />
+      <ActionsPanel id={id} content={content} isSaving={isSaving} />
       <div className="flex flex-1 flex-col md:flex-row min-h-0">
         <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col border-t md:border-t-0 md:border-r">
           <Editor
@@ -86,7 +79,6 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
             theme="vs-dark"
             value={content}
             onChange={(value) => setContent(value || '')}
-            onValidate={handleEditorValidation}
             loading={<Skeleton className="w-full h-full" />}
             options={{
               minimap: { enabled: false },
