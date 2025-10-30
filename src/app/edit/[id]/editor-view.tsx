@@ -9,7 +9,11 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ActionsPanel } from './actions-panel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useIsMobile } from '@/hooks/use-mobile';
-
+import {
+  Panel,
+  PanelGroup,
+  PanelResizeHandle,
+} from "@/components/ui/resizable"
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -124,14 +128,17 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
           </TabsContent>
         </Tabs>
       ) : (
-        <div className="flex flex-1 flex-row min-h-0">
-          <div className="w-1/2 h-full flex flex-col border-r">
-            {editorComponent}
-          </div>
-          <div className="w-1/2 h-full">
+        <PanelGroup direction="horizontal" className="flex flex-1 flex-row min-h-0">
+          <Panel defaultSize={50}>
+            <div className="w-full h-full flex flex-col">
+              {editorComponent}
+            </div>
+          </Panel>
+          <PanelResizeHandle className="w-px bg-border hover:bg-primary transition-colors data-[resize-handle-state=drag]:bg-primary" />
+          <Panel defaultSize={50}>
             {previewComponent}
-          </div>
-        </div>
+          </Panel>
+        </PanelGroup>
       )}
     </div>
   );
