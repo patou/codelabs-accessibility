@@ -7,6 +7,9 @@ import { saveHtml } from '@/lib/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ActionsPanel } from './actions-panel';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useIsMobile } from '@/hooks/use-mobile';
+
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -28,6 +31,8 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
+  const isMobile = useIsMobile();
+
 
   useEffect(() => {
     setIsMounted(true);
@@ -35,8 +40,6 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
     const handleKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
-        // Optionnel : on pourrait déclencher une sauvegarde manuelle ici si besoin.
-        // Pour l'instant, on empêche juste la popup du navigateur.
       }
     };
 
@@ -48,64 +51,88 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
   }, []);
 
   useEffect(() => {
-    // Only save if content has changed
     if (isMounted && debouncedContent !== initialContent) {
-      startSaveTransition(async () => {
-        const result = await saveHtml(id, debouncedContent);
-        if (result.error) {
-          toast({
-            title: "Erreur d'enregistrement",
-            description: result.error,
-            variant: 'destructive',
-          });
-        } else {
-          // Increment version to force iframe reload
-          setPreviewVersion((v) => v + 1);
-        }
-      });
+        startSaveTransition(async () => {
+          const result = await saveHtml(id, debouncedContent);
+          if (result.error) {
+            toast({
+              title: "Erreur d'enregistrement",
+              description: result.error,
+              variant: 'destructive',
+            });
+          } else {
+            setPreviewVersion((v) => v + 1);
+          }
+        });
     }
   }, [debouncedContent, id, toast, isMounted, initialContent]);
 
   const previewUrl = `/view/${id}`;
 
+  const editorComponent = (
+    <Editor
+      height="100%"
+      language="html"
+      theme="vs-dark"
+      value={content}
+      onChange={(value) => setContent(value || '')}
+      loading={<Skeleton className="w-full h-full" />}
+      options={{
+        minimap: { enabled: false },
+        fontSize: 14,
+        wordWrap: 'on',
+        automaticLayout: true,
+        scrollBeyondLastLine: false,
+      }}
+    />
+  );
+
+  const previewComponent = (
+    <div className="w-full h-full bg-white relative">
+      {isMounted ? (
+        <iframe
+          key={previewVersion}
+          src={previewUrl}
+          title="Aperçu en direct"
+          sandbox="allow-scripts allow-same-origin"
+          className="w-full h-full border-0 transition-opacity duration-300"
+        />
+      ) : (
+        <Skeleton className="w-full h-full" />
+      )}
+      <div className="absolute top-2 left-2 bg-slate-800 text-white text-xs px-2 py-1 rounded-full opacity-70 pointer-events-none">
+        Aperçu en direct
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col h-full w-full">
       <ActionsPanel id={id} content={content} isSaving={isSaving} />
-      <div className="flex flex-1 flex-col md:flex-row min-h-0">
-        <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col border-t md:border-t-0 md:border-r">
-          <Editor
-            height="100%"
-            language="html"
-            theme="vs-dark"
-            value={content}
-            onChange={(value) => setContent(value || '')}
-            loading={<Skeleton className="w-full h-full" />}
-            options={{
-              minimap: { enabled: false },
-              fontSize: 14,
-              wordWrap: 'on',
-              automaticLayout: true,
-              scrollBeyondLastLine: false,
-            }}
-          />
-        </div>
-        <div className="w-full md:w-1/2 h-1/2 md:h-full bg-white relative">
-          {isMounted ? (
-            <iframe
-              key={previewVersion} // Force re-render on version change
-              src={previewUrl}
-              title="Aperçu en direct"
-              sandbox="allow-scripts allow-same-origin"
-              className="w-full h-full border-0 transition-opacity duration-300"
-            />
-          ) : (
-            <Skeleton className="w-full h-full" />
-          )}
-           <div className="absolute top-2 left-2 bg-slate-800 text-white text-xs px-2 py-1 rounded-full opacity-70 pointer-events-none">
-            Aperçu en direct
+      
+      {isMobile ? (
+        <Tabs defaultValue="code" className="flex flex-col flex-1 min-h-0 w-full">
+          <TabsList className="grid w-full grid-cols-2 rounded-none">
+            <TabsTrigger value="code">Code</TabsTrigger>
+            <TabsTrigger value="preview">Aperçu</TabsTrigger>
+          </TabsList>
+          <TabsContent value="code" className="flex-1 min-h-0 data-[state=inactive]:hidden">
+            {editorComponent}
+          </TabsContent>
+          <TabsContent value="preview" className="flex-1 min-h-0 data-[state=inactive]:hidden">
+            {previewComponent}
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <div className="flex flex-1 flex-row min-h-0">
+          <div className="w-1/2 h-full flex flex-col border-r">
+            {editorComponent}
+          </div>
+          <div className="w-1/2 h-full">
+            {previewComponent}
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
