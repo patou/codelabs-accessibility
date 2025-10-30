@@ -10,9 +10,9 @@ import { ActionsPanel } from './actions-panel';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
-  Panel,
-  PanelGroup,
-  PanelResizeHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+  ResizableHandle,
 } from "@/components/ui/resizable"
 
 function useDebounce<T>(value: T, delay: number): T {
@@ -128,17 +128,17 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
           </TabsContent>
         </Tabs>
       ) : (
-        <PanelGroup direction="horizontal" className="flex flex-1 flex-row min-h-0">
-          <Panel defaultSize={50}>
+        <ResizablePanelGroup direction="horizontal" className="flex flex-1 flex-row min-h-0">
+          <ResizablePanel defaultSize={50}>
             <div className="w-full h-full flex flex-col">
               {editorComponent}
             </div>
-          </Panel>
-          <PanelResizeHandle className="w-px bg-border hover:bg-primary transition-colors data-[resize-handle-state=drag]:bg-primary" />
-          <Panel defaultSize={50}>
+          </ResizablePanel>
+          <ResizableHandle className="w-px bg-border hover:bg-primary transition-colors data-[resize-handle-state=drag]:bg-primary" />
+          <ResizablePanel defaultSize={50}>
             {previewComponent}
-          </Panel>
-        </PanelGroup>
+          </ResizablePanel>
+        </ResizablePanelGroup>
       )}
     </div>
   );
