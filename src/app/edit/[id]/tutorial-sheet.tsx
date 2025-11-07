@@ -84,6 +84,11 @@ const tutorialSteps = [
       { before: '<input type="submit" onclick="validateForm()">', after: '<form onsubmit="..."><input type="submit"></form>', explanation: 'L\'événement de soumission doit être sur la balise `<form>` (`onsubmit`), pas sur le bouton (`onclick`).' },
     ],
   },
+  {
+    title: 'Étape 5 : Finalisation des correctifs',
+    description: "Bravo, vous avez terminé le tutoriel ! Comparez votre travail avec la solution finale entièrement accessible pour voir toutes les améliorations en action.",
+    isSolution: true,
+  }
 ];
 
 
@@ -173,6 +178,30 @@ export function TutorialSheet() {
               >
                 {tutorialSteps.map((step, index) => {
                   const stepKey = `step-${index}`;
+
+                  if (step.isSolution) {
+                    return (
+                      <AccordionItem key={index} value={stepKey}>
+                        <AccordionTrigger className="text-lg hover:no-underline">
+                          {step.title}
+                        </AccordionTrigger>
+                        <AccordionContent>
+                          <div className="space-y-4 pr-4">
+                            <p className="text-muted-foreground">{step.description}</p>
+                            <div className="mt-4 flex justify-center">
+                              <Link href="/solution" passHref>
+                                <Button size="lg">
+                                  <Code className="mr-2 h-5 w-5" />
+                                  Voir le code de la solution
+                                </Button>
+                              </Link>
+                            </div>
+                          </div>
+                        </AccordionContent>
+                      </AccordionItem>
+                    );
+                  }
+
                   const numVisible = visibleChanges[stepKey] || 0;
                   const allHintsShown = numVisible === step.changes.length;
 
@@ -222,24 +251,6 @@ export function TutorialSheet() {
                   )
                 })}
               </Accordion>
-            </div>
-            <div className="mt-8 text-center">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Voir la solution complète</CardTitle>
-                  <CardDescription>
-                    Vous avez terminé le tutoriel ? Comparez votre travail avec la solution finale entièrement accessible.
-                  </CardDescription>
-                </CardHeader>
-                <CardFooter className="flex justify-center">
-                  <Link href="/solution" passHref>
-                    <Button size="lg">
-                      <Code className="mr-2 h-5 w-5" />
-                      Voir le code de la solution
-                    </Button>
-                  </Link>
-                </CardFooter>
-              </Card>
             </div>
           </div>
         </ScrollArea>
