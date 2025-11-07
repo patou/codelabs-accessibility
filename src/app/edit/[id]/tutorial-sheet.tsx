@@ -34,7 +34,8 @@ import {
 import { Code, GraduationCap, Lightbulb } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const LOCAL_STORAGE_KEY = 'codelabs-a11y-tutorial-step';
+const STEP_STORAGE_KEY = 'codelabs-a11y-tutorial-step';
+const HINTS_STORAGE_KEY = 'codelabs-a11y-tutorial-visible-hints';
 
 const tutorialSteps = [
   {
@@ -91,11 +92,23 @@ export function TutorialSheet() {
   const [visibleChanges, setVisibleChanges] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    const savedStep = localStorage.getItem(LOCAL_STORAGE_KEY);
+    // Restore saved step
+    const savedStep = localStorage.getItem(STEP_STORAGE_KEY);
     if (savedStep) {
       setOpenStep(savedStep);
     } else {
       setOpenStep('step-0');
+    }
+
+    // Restore visible hints
+    try {
+      const savedHints = localStorage.getItem(HINTS_STORAGE_KEY);
+      if (savedHints) {
+        setVisibleChanges(JSON.parse(savedHints));
+      }
+    } catch (e) {
+      console.error("Failed to parse visible hints from localStorage", e);
+      localStorage.removeItem(HINTS_STORAGE_KEY);
     }
   }, []);
 
@@ -103,24 +116,26 @@ export function TutorialSheet() {
     const newStep = value;
     setOpenStep(newStep);
     if (newStep) {
-      localStorage.setItem(LOCAL_STORAGE_KEY, newStep);
+      localStorage.setItem(STEP_STORAGE_KEY, newStep);
     } else {
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
-    }
-    // Reset hints when collapsing or changing step
-    if (newStep !== openStep) {
-      setVisibleChanges({});
+      localStorage.removeItem(STEP_STORAGE_KEY);
     }
   };
   
   const showHint = (stepKey: string, maxHints: number) => {
-    const currentVisibleCount = visibleChanges[stepKey] || 0;
-    if (currentVisibleCount < maxHints) {
-      setVisibleChanges(prev => ({
-        ...prev,
-        [stepKey]: currentVisibleCount + 1,
-      }));
-    }
+    setVisibleChanges(prev => {
+      const currentVisibleCount = prev[stepKey] || 0;
+      if (currentVisibleCount < maxHints) {
+        const newChanges = {
+          ...prev,
+          [stepKey]: currentVisibleCount + 1,
+        };
+        // Persist to localStorage
+        localStorage.setItem(HINTS_STORAGE_KEY, JSON.stringify(newChanges));
+        return newChanges;
+      }
+      return prev;
+    });
   };
 
 
