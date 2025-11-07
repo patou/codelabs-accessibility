@@ -69,7 +69,7 @@ const tutorialSteps = [
     description: "Les éléments avec lesquels l'utilisateur interagit, comme les accordéons, les boutons et les formulaires, nécessitent une attention particulière pour être utilisables par tous.",
     changes: [
       { before: '<div class="accordion-item">', after: 'Utilisation de `aria-expanded`, `aria-controls`, `hidden`', explanation: 'L\'accordéon doit indiquer son état (ouvert/fermé) avec `aria-expanded` et lier le bouton à son contenu avec `aria-controls`.' },
-      { before: '<div class="favorite-btn">', after: '<button class="favorite-btn">', explanation: 'Remplacer les `div` cliquables par des `<button>`, qui sont nativement accessibles au clavier et sémantiques.' },
+      { before: '<div class="favorite-btn">', after: '<button class="favorite-btn">', explanation: 'Remplacer les `<div>` cliquables par des `<button>`, qui sont nativement accessibles au clavier et sémantiques.' },
       { before: '<button ...>Favori</button>', after: '<button title="Ajouter ... aux favoris">', explanation: 'Utiliser `title` sur les boutons icônes pour fournir une description textuelle claire de leur action.' },
       { before: '<div class="session">', after: '<article class="session" tabindex="0">', explanation: 'Rendre les cartes de session focalisables avec `tabindex="0"` pour que les utilisateurs au clavier puissent y naviguer.' },
     ],
@@ -78,18 +78,64 @@ const tutorialSteps = [
     title: 'Étape 4 : Accessibilité des Formulaires',
     description: "Les formulaires sont une source majeure de problèmes d'accessibilité. Il est crucial de lier correctement les étiquettes (`<label>`) aux champs de saisie (`<input>`) et de gérer les erreurs de manière accessible.",
     changes: [
-      { before: '<div class="form-label">Nom</div><input>', after: '<label for="form-nom">Nom <input id="form-nom"></label>', explanation: 'Associer chaque `label` à son `input` avec l\'attribut `for` et un `id` correspondant. Cela permet de cliquer sur l\'étiquette pour activer le champ.' },
+      { before: '<div class="form-label">Nom</div><input>', after: '<label for="form-nom">Nom <input id="form-nom"></label>', explanation: 'Associer chaque `<label>` à son `<input>` avec l\'attribut `for` et un `id` correspondant. Cela permet de cliquer sur l\'étiquette pour activer le champ.' },
       { before: '<div class="form-section">', after: '<form onsubmit="validateForm(event)">', explanation: 'Utiliser une balise `<form>` pour encapsuler les champs de formulaire.' },
       { before: '<div id="form-error"></div>', after: '<div id="form-error" role="alert" aria-live="assertive">', explanation: '`role="alert"` et `aria-live="assertive"` forcent les lecteurs d\'écran à annoncer immédiatement les messages d\'erreur dès qu\'ils apparaissent.' },
       { before: '<input type="submit" onclick="validateForm()">', after: '<form onsubmit="..."><input type="submit"></form>', explanation: 'L\'événement de soumission doit être sur la balise `<form>` (`onsubmit`), pas sur le bouton (`onclick`).' },
     ],
   },
   {
-    title: 'Étape 5 : Finalisation des correctifs',
+    title: 'Etape 5 : Derniers correctifs',
     description: "Bravo, vous avez terminé le tutoriel ! Comparez votre travail avec la solution finale entièrement accessible pour voir toutes les améliorations en action.",
     isSolution: true,
   }
 ];
+
+// Ce composant parse le texte et transforme les `<code>` en liens MDN.
+const Explanation = ({ text }: { text: string }) => {
+  const parts = text.split(/(`[^`]+`)/g);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('`') && part.endsWith('`')) {
+          const codeContent = part.slice(1, -1);
+          let term = codeContent.replace(/[<>"]/g, '').trim().split(/[ =]/g)[0];
+          
+          const isAttribute = !codeContent.startsWith('<');
+          const isAria = term.startsWith('aria-');
+          const isAlertRole = codeContent == `role="alert"`;
+
+          let mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Element/${term}`;
+          if (isAttribute) {
+            if (isAria) {
+                mdnUrl = `https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Attributes/${term.split("=")[0]}`;
+            } else if (isAlertRole) {
+              mdnUrl = 'https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role';
+            }
+            else {
+              switch(term) {
+                case "alt": mdnUrl = `https://developer.mozilla.org/fr/docs/Web/API/HTMLImageElement/${term}`;break;
+                case "for": mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Attributes/${term}`;break;
+                default: mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Global_attributes/${term}`;break;
+              };
+            }
+          }//TODO Océane fixer le role=alert, le reste a l'air bon
+
+          
+          return (
+            <code key={index} className="text-sm p-1 bg-muted rounded-sm">
+              <a href={mdnUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+                {codeContent}
+              </a>
+            </code>
+          );
+        }
+        return <span key={index}>{part}</span>;
+      })}
+    </>
+  );
+};
 
 
 export function TutorialSheet() {
@@ -227,7 +273,8 @@ export function TutorialSheet() {
                                   </div>
                                 </div>
                                 <p className="mt-3 text-sm text-muted-foreground">
-                                  <span className="font-semibold">Pourquoi ?</span> {change.explanation}
+                                  <span className="font-semibold">Pourquoi ?</span>{' '}
+                                  <Explanation text={change.explanation} />
                                 </p>
                               </div>
                             ))}
@@ -242,7 +289,7 @@ export function TutorialSheet() {
                             )}
                              {allHintsShown && (
                                 <p className="text-center text-sm text-green-600 font-semibold mt-4">
-                                    Bravo, vous avez vu tous les indices pour cette étape !
+                                    Vous avez vu tous les indices pour cette étape. Vous pouvez passer à l'étape suivante.
                                 </p>
                             )}
                         </div>
