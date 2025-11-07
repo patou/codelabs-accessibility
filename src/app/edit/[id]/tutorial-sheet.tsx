@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,8 +25,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { ArrowLeft, CheckCircle, Code, GraduationCap } from 'lucide-react';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { Code, GraduationCap } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+
+const LOCAL_STORAGE_KEY = 'codelabs-a11y-tutorial-step';
 
 const tutorialSteps = [
   {
@@ -78,6 +87,23 @@ const tutorialSteps = [
 
 
 export function TutorialSheet() {
+  const [openStep, setOpenStep] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    const savedStep = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (savedStep) {
+      setOpenStep(savedStep);
+    } else {
+      setOpenStep('step-0');
+    }
+  }, []);
+
+  const handleStepChange = (value: string) => {
+    setOpenStep(value);
+    localStorage.setItem(LOCAL_STORAGE_KEY, value);
+  };
+
+
   return (
     <Sheet>
         <Tooltip>
@@ -93,7 +119,7 @@ export function TutorialSheet() {
                 <p>Tutoriel</p>
             </TooltipContent>
         </Tooltip>
-      <SheetContent className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0">
+      <SheetContent className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0 flex flex-col">
         <SheetHeader className="p-6 pb-0">
           <SheetTitle className="text-xl">Tutoriel d'Accessibilité</SheetTitle>
           <SheetDescription>
@@ -101,40 +127,45 @@ export function TutorialSheet() {
           </SheetDescription>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-4rem)]">
-          <div className="px-6 py-8">
+          <div className="px-6">
             <div className="grid gap-6">
-              {tutorialSteps.map((step, index) => (
-                <Card key={index} className="overflow-hidden">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <CheckCircle className="text-primary" />
+              <Accordion 
+                type="single" 
+                collapsible 
+                className="w-full"
+                value={openStep}
+                onValueChange={handleStepChange}
+              >
+                {tutorialSteps.map((step, index) => (
+                  <AccordionItem key={index} value={`step-${index}`}>
+                    <AccordionTrigger className="text-lg hover:no-underline">
                       {step.title}
-                    </CardTitle>
-                    <CardDescription>{step.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {step.changes.map((change, changeIndex) => (
-                        <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                            <div>
-                              <p className="font-semibold text-destructive mb-1">Avant :</p>
-                              <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto">{change.before}</code>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-4 pr-4">
+                          <p className="text-muted-foreground">{step.description}</p>
+                          {step.changes.map((change, changeIndex) => (
+                            <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                                <div>
+                                  <p className="font-semibold text-destructive mb-1">Avant :</p>
+                                  <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
+                                </div>
+                                <div>
+                                  <p className="font-semibold text-green-600 mb-1">Après :</p>
+                                  <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
+                                </div>
+                              </div>
+                              <p className="mt-3 text-sm text-muted-foreground">
+                                <span className="font-semibold">Pourquoi ?</span> {change.explanation}
+                              </p>
                             </div>
-                            <div>
-                              <p className="font-semibold text-green-600 mb-1">Après :</p>
-                              <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto">{change.after}</code>
-                            </div>
-                          </div>
-                          <p className="mt-3 text-sm text-muted-foreground">
-                            <span className="font-semibold">Pourquoi ?</span> {change.explanation}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                          ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
             </div>
             <div className="mt-8 text-center">
               <Card>
@@ -160,3 +191,4 @@ export function TutorialSheet() {
     </Sheet>
   );
 }
+
