@@ -70,23 +70,6 @@ body {
   font-weight: bold;
 }
 
-.register-btn {
-  background-color: #e67e22;
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.1em;
-  cursor: pointer;
-  display: inline-block;
-  text-decoration: none;
-  transition: background-color 0.3s;
-}
-
-.register-btn:hover {
-  background-color: #d35400;
-}
-
 h3, h4 {
   border-bottom: 2px solid #ecf0f1;
   padding-bottom: 10px;
@@ -263,7 +246,6 @@ h3, h4 {
 .speaker-profile p {
   font-size: 0.9em;
   line-height: 1.5;
-  color: #7f8c8d;
 }
 
 .form-section {
@@ -290,22 +272,6 @@ input[type="email"] {
   border: 1px solid #bdc3c7;
   border-radius: 4px;
   box-sizing: border-box;
-}
-
-input[type="submit"] {
-  background-color: #3498db;
-  color: white;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 5px;
-  font-size: 1em;
-  cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.3s;
-}
-
-input[type="submit"]:hover {
-  background-color: #2980b9;
 }
 
 .form-error {
@@ -349,7 +315,6 @@ input[type="submit"]:hover {
   text-align: center;
   padding: 20px;
   font-size: 0.9em;
-  color: #7f8c8d;
 }
 
 #snackbar {

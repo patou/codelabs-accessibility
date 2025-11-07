@@ -5,6 +5,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conférence sur l'Accessibilité Web</title>
   <link rel="stylesheet" href="/initial-styles.css">
+  <style> 
+    .register-btn {
+      background-color: #b45809;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.1em;
+      display: inline-block;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .register-btn:hover {
+      background-color: #c3561a;
+    }
+
+    .text-light {
+      color: #6d797a;
+    }
+
+    .text-footer {
+      color: #467576;
+    }
+
+    input[type="submit"] {
+      background-color: #347EA4;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #297AC3;
+    }
+  </style>
 </head>
 <body>
 
@@ -91,12 +130,12 @@
           <article class="speaker-profile">
             <img src="https://picsum.photos/id/91/150/150" alt="Photo de Patrice de Saint Steban.">
             <h3>Patrice de Saint Steban</h3>
-            <p>Expert en accessibilité numérique et développeur full stack passionné, Patrice partagera sa vision pour un web plus humain.</p>
+            <p class="text-light">Expert en accessibilité numérique et développeur full stack passionné, Patrice partagera sa vision pour un web plus humain.</p>
           </article>
           <article class="speaker-profile">
             <img src="https://picsum.photos/id/65/150/150" alt="Photo d'Océane Gillard.">
             <h3>Océane Gillard</h3>
-            <p>Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
+            <p class="text-light">Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
           </article>
         </div>
       </section>
@@ -135,7 +174,7 @@
   </aside>
 
   <footer class="footer">
-    <p aria-label="Copyright 2025 Conférence Web Accessibilité. Tous droits réservés">&copy; 2025 Conférence Web <abbr title="Accessibilité">A11y</abbr>. Tous droits réservés.</p>
+    <p class="text-footer" aria-label="Copyright 2025 Conférence Web Accessibilité. Tous droits réservés">&copy; 2025 Conférence Web <abbr title="Accessibilité">A11y</abbr>. Tous droits réservés.</p>
   </footer>
 
   <div id="snackbar" role="status" aria-live="polite">Votre inscription a bien été validée !</div>

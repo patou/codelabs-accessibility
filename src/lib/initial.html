@@ -1,9 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Conférence sur l'Accessibilité Web</title>
   <link rel="stylesheet" href="/initial-styles.css">
+  <style> 
+    .register-btn {
+      background-color: #e67e22;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 5px;
+      font-size: 1.1em;
+      display: inline-block;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .register-btn:hover {
+      background-color: #d35400;
+    }
+
+    .text-light {
+      color: #7f8c8d;
+    }
+    
+    input[type="submit"] {
+      background-color: #3498db;
+      color: white;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #2980b9;
+    }
+  </style>
 </head>
 <body>
 
@@ -87,12 +123,12 @@
         <div class="speaker-profile">
           <img src="https://picsum.photos/id/91/150/150">
           <h4>Patrice de Saint Steban</h4>
-          <p>Expert en accessibilité numérique et développeur full stack passionné, Patrice partagera sa vision pour un web plus humain.</p>
+          <p class="text-light">Expert en accessibilité numérique et développeur full stack passionné, Patrice partagera sa vision pour un web plus humain.</p>
         </div>
         <div class="speaker-profile">
           <img src="https://picsum.photos/id/65/150/150">
           <h4>Océane Gillard</h4>
-          <p>Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
+          <p class="text-light">Spécialiste des normes WCAG et développeuse Mobile et Front, Océane vous montrera comment allier esthétique et accessibilité.</p>
         </div>
       </div>
       
@@ -129,7 +165,7 @@
   </div>
 
   <div class="footer">
-    <p>&copy; 2024 Conférence Web A11y. Tous droits réservés.</p>
+    <p class="text-light">&copy; 2024 Conférence Web A11y. Tous droits réservés.</p>
   </div>
 
   <div id="snackbar">Votre inscription a bien été validée !</div>
