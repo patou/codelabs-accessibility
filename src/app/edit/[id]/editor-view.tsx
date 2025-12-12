@@ -14,6 +14,7 @@ import {
   ResizablePanelGroup,
   ResizableHandle,
 } from "@/components/ui/resizable"
+import { TutorialSheet } from './tutorial-sheet';
 
 function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -109,6 +110,8 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
       </div>
     </div>
   );
+  
+  const tutorialComponent = <TutorialSheet />;
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -116,15 +119,19 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
       
       {isMobile ? (
         <Tabs defaultValue="code" className="flex flex-col flex-1 min-h-0 w-full">
-          <TabsList className="grid w-full grid-cols-2 rounded-none">
+          <TabsList className="grid w-full grid-cols-3 rounded-none">
             <TabsTrigger value="code">Code</TabsTrigger>
             <TabsTrigger value="preview">Aperçu</TabsTrigger>
+            <TabsTrigger value="tutorial">Tutoriel</TabsTrigger>
           </TabsList>
           <TabsContent value="code" className="flex-1 min-h-0 data-[state=inactive]:hidden">
             {editorComponent}
           </TabsContent>
           <TabsContent value="preview" className="flex-1 min-h-0 data-[state=inactive]:hidden">
             {previewComponent}
+          </TabsContent>
+          <TabsContent value="tutorial" className="flex-1 min-h-0 data-[state=inactive]:hidden">
+            {tutorialComponent}
           </TabsContent>
         </Tabs>
       ) : (
@@ -136,7 +143,18 @@ export function EditorView({ id, initialContent }: { id: string; initialContent:
           </ResizablePanel>
           <ResizableHandle className="w-px bg-border hover:bg-primary transition-colors data-[resize-handle-state=drag]:bg-primary" />
           <ResizablePanel defaultSize={50}>
-            {previewComponent}
+            <Tabs defaultValue="preview" className="flex flex-col h-full w-full">
+              <TabsList className="grid w-full grid-cols-2 rounded-none">
+                <TabsTrigger value="preview">Aperçu</TabsTrigger>
+                <TabsTrigger value="tutorial">Tutoriel</TabsTrigger>
+              </TabsList>
+              <TabsContent value="preview" className="flex-1 min-h-0 data-[state=inactive]:hidden">
+                {previewComponent}
+              </TabsContent>
+              <TabsContent value="tutorial" className="flex-1 min-h-0 data-[state=inactive]:hidden">
+                {tutorialComponent}
+              </TabsContent>
+            </Tabs>
           </ResizablePanel>
         </ResizablePanelGroup>
       )}

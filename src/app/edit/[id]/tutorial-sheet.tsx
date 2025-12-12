@@ -5,33 +5,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Code, GraduationCap, Lightbulb } from 'lucide-react';
+import { Code, Lightbulb } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const STEP_STORAGE_KEY = 'codelabs-a11y-tutorial-step';
@@ -91,7 +70,6 @@ const tutorialSteps = [
   }
 ];
 
-// Ce composant parse le texte et transforme les `<code>` en liens MDN.
 const Explanation = ({ text }: { text: string }) => {
   const parts = text.split(/(`[^`]+`)/g);
 
@@ -100,7 +78,7 @@ const Explanation = ({ text }: { text: string }) => {
       {parts.map((part, index) => {
         if (part.startsWith('`') && part.endsWith('`')) {
           const codeContent = part.slice(1, -1);
-          let term = codeContent.replace(/[<>"]/g, '').trim().split(/[ =]/g)[0];
+          let term = codeContent.replace(/[<>"']/g, '').trim().split(/[ =]/g)[0];
           
           const isAttribute = !codeContent.startsWith('<');
           const isAria = term.startsWith('aria-');
@@ -120,7 +98,7 @@ const Explanation = ({ text }: { text: string }) => {
                 default: mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Global_attributes/${term}`;break;
               };
             }
-          }//TODO Océane fixer le role=alert, le reste a l'air bon
+          }
 
           
           return (
@@ -143,7 +121,6 @@ export function TutorialSheet() {
   const [visibleChanges, setVisibleChanges] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
-    // Restore saved step
     const savedStep = localStorage.getItem(STEP_STORAGE_KEY);
     if (savedStep) {
       setOpenStep(savedStep);
@@ -151,7 +128,6 @@ export function TutorialSheet() {
       setOpenStep('step-0');
     }
 
-    // Restore visible hints
     try {
       const savedHints = localStorage.getItem(HINTS_STORAGE_KEY);
       if (savedHints) {
@@ -181,7 +157,6 @@ export function TutorialSheet() {
           ...prev,
           [stepKey]: currentVisibleCount + 1,
         };
-        // Persist to localStorage
         localStorage.setItem(HINTS_STORAGE_KEY, JSON.stringify(newChanges));
         return newChanges;
       }
@@ -191,117 +166,98 @@ export function TutorialSheet() {
 
 
   return (
-    <Sheet>
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="p-2 md:px-3">
-                        <GraduationCap className="h-4 w-4 md:mr-2" />
-                        <span className="hidden md:inline">Tutoriel</span>
-                    </Button>
-                </SheetTrigger>
-            </TooltipTrigger>
-            <TooltipContent className="md:hidden">
-                <p>Tutoriel</p>
-            </TooltipContent>
-        </Tooltip>
-      <SheetContent className="w-full sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-0 flex flex-col">
-        <SheetHeader className="p-6 pb-0">
-          <SheetTitle className="text-xl">Tutoriel d'Accessibilité</SheetTitle>
-          <SheetDescription>
-            Comment rendre votre page web accessible, étape par étape.
-          </SheetDescription>
-        </SheetHeader>
-        <ScrollArea className="h-[calc(100vh-4rem)]">
-          <div className="px-6 pb-8">
-            <div className="grid gap-6">
-              <Accordion 
-                type="single" 
-                collapsible 
-                className="w-full"
-                value={openStep}
-                onValueChange={handleStepChange}
-              >
-                {tutorialSteps.map((step, index) => {
-                  const stepKey = `step-${index}`;
+    <ScrollArea className="h-full">
+      <div className="px-6 pb-8 pt-4">
+         <div className="space-y-1 mb-6">
+            <h2 className="text-xl font-bold">Tutoriel d'Accessibilité</h2>
+            <p className="text-muted-foreground">Comment rendre votre page web accessible, étape par étape.</p>
+        </div>
+        <div className="grid gap-6">
+          <Accordion 
+            type="single" 
+            collapsible 
+            className="w-full"
+            value={openStep}
+            onValueChange={handleStepChange}
+          >
+            {tutorialSteps.map((step, index) => {
+              const stepKey = `step-${index}`;
 
-                  if (step.isSolution) {
-                    return (
-                      <AccordionItem key={index} value={stepKey}>
-                        <AccordionTrigger className="text-lg hover:no-underline">
-                          {step.title}
-                        </AccordionTrigger>
-                        <AccordionContent>
-                          <div className="space-y-4 pr-4">
-                            <p className="text-muted-foreground">{step.description}</p>
-                            <div className="mt-4 flex justify-center">
-                              <Link href="/solution" passHref>
-                                <Button size="lg">
-                                  <Code className="mr-2 h-5 w-5" />
-                                  Voir le code de la solution
-                                </Button>
-                              </Link>
-                            </div>
-                          </div>
-                        </AccordionContent>
-                      </AccordionItem>
-                    );
-                  }
-
-                  const numVisible = visibleChanges[stepKey] || 0;
-                  const allHintsShown = numVisible === step.changes.length;
-
-                  return (
-                    <AccordionItem key={index} value={stepKey}>
-                      <AccordionTrigger className="text-lg hover:no-underline">
-                        {step.title}
-                      </AccordionTrigger>
-                      <AccordionContent>
-                        <div className="space-y-4 pr-4">
-                            <p className="text-muted-foreground">{step.description}</p>
-                            
-                            {step.changes.slice(0, numVisible).map((change, changeIndex) => (
-                              <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                                  <div>
-                                    <p className="font-semibold text-destructive mb-1">Avant :</p>
-                                    <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
-                                  </div>
-                                  <div>
-                                    <p className="font-semibold text-green-600 mb-1">Après :</p>
-                                    <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
-                                  </div>
-                                </div>
-                                <p className="mt-3 text-sm text-muted-foreground">
-                                  <span className="font-semibold">Pourquoi ?</span>{' '}
-                                  <Explanation text={change.explanation} />
-                                </p>
-                              </div>
-                            ))}
-
-                            {!allHintsShown && (
-                                <div className="mt-4 flex justify-center">
-                                    <Button onClick={() => showHint(stepKey, step.changes.length)}>
-                                        <Lightbulb className="mr-2 h-4 w-4" />
-                                        Voir un indice ({numVisible + 1}/{step.changes.length})
-                                    </Button>
-                                </div>
-                            )}
-                             {allHintsShown && (
-                                <p className="text-center text-sm text-green-600 font-semibold mt-4">
-                                    Vous avez vu tous les indices pour cette étape. Vous pouvez passer à l'étape suivante.
-                                </p>
-                            )}
+              if (step.isSolution) {
+                return (
+                  <AccordionItem key={index} value={stepKey}>
+                    <AccordionTrigger className="text-lg hover:no-underline">
+                      {step.title}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-4 pr-4">
+                        <p className="text-muted-foreground">{step.description}</p>
+                        <div className="mt-4 flex justify-center">
+                          <Link href="/solution" passHref>
+                            <Button size="lg">
+                              <Code className="mr-2 h-5 w-5" />
+                              Voir le code de la solution
+                            </Button>
+                          </Link>
                         </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  )
-                })}
-              </Accordion>
-            </div>
-          </div>
-        </ScrollArea>
-      </SheetContent>
-    </Sheet>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              }
+
+              const numVisible = visibleChanges[stepKey] || 0;
+              const allHintsShown = numVisible === step.changes.length;
+
+              return (
+                <AccordionItem key={index} value={stepKey}>
+                  <AccordionTrigger className="text-lg hover:no-underline">
+                    {step.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pr-4">
+                        <p className="text-muted-foreground">{step.description}</p>
+                        
+                        {step.changes.slice(0, numVisible).map((change, changeIndex) => (
+                          <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+                              <div>
+                                <p className="font-semibold text-destructive mb-1">Avant :</p>
+                                <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
+                              </div>
+                              <div>
+                                <p className="font-semibold text-green-600 mb-1">Après :</p>
+                                <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
+                              </div>
+                            </div>
+                            <p className="mt-3 text-sm text-muted-foreground">
+                              <span className="font-semibold">Pourquoi ?</span>{' '}
+                              <Explanation text={change.explanation} />
+                            </p>
+                          </div>
+                        ))}
+
+                        {!allHintsShown && (
+                            <div className="mt-4 flex justify-center">
+                                <Button onClick={() => showHint(stepKey, step.changes.length)}>
+                                    <Lightbulb className="mr-2 h-4 w-4" />
+                                    Voir un indice ({numVisible + 1}/{step.changes.length})
+                                </Button>
+                            </div>
+                        )}
+                          {allHintsShown && (
+                            <p className="text-center text-sm text-green-600 font-semibold mt-4">
+                                Vous avez vu tous les indices pour cette étape. Vous pouvez passer à l'étape suivante.
+                            </p>
+                        )}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )
+            })}
+          </Accordion>
+        </div>
+      </div>
+    </ScrollArea>
   );
 }
