@@ -131,6 +131,42 @@ h3, h4 {
   font-weight: bold;
 }
 
+details.accordion-item {
+  border-bottom: 1px solid #eee;
+}
+summary.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: none;
+  font-size: 1.1em;
+  cursor: pointer;
+  list-style: none; /* Masque le marqueur par défaut */
+}
+summary.accordion-header::-webkit-details-marker {
+  display: none; /* Masque le marqueur sur Chrome/Safari */
+}
+summary.accordion-header:hover {
+  background-color: #f1f1f1;
+}
+summary.accordion-header .icon {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+details[open] > summary.accordion-header .icon::before {
+  content: "−";
+}
+details:not([open]) > summary.accordion-header .icon::before {
+  content: "+";
+}
+details > .accordion-content {
+  max-height: fit-content;
+  overflow: auto;
+}
+
 .schedule-grid, .speaker-grid {
   display: grid;
   grid-template-columns: 1fr;

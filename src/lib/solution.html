@@ -69,34 +69,34 @@
       </section>
 
       <section class="accordion" aria-label="Informations sur la conférence">
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-1">
+        <details class="accordion-item">
+          <summary class="accordion-header">
             Lieu
-            <span class="icon" aria-hidden="true">+</span>
-          </button>
-          <div id="accordion-content-1" class="accordion-content" hidden>
+            <span class="icon" aria-hidden="true"></span>
+          </summary>
+          <div class="accordion-content">
             <p>L'événement a lieu à l'agence nantaise de Zenika, idéalement située en centre ville.</p>
             <img src="/map.png" alt="">
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-2">
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-header">
             Date
-            <span class="icon" aria-hidden="true">+</span>
-          </button>
-          <div id="accordion-content-2" class="accordion-content" hidden>
+            <span class="icon" aria-hidden="true"></span>
+          </summary>
+          <div class="accordion-content">
             <p aria-label="Le 4 mai 2026 de 9 heures à 17 heures">Le <span>4 mai 2026</span>, de 9h00 à 17h00.</p>
           </div>
-        </div>
-        <div class="accordion-item">
-          <button class="accordion-header" aria-expanded="false" aria-controls="accordion-content-3">
+        </details>
+        <details class="accordion-item">
+          <summary class="accordion-header">
             Nombre de places
-            <span class="icon" aria-hidden="true">+</span>
-          </button>
-          <div id="accordion-content-3" class="accordion-content" hidden>
+            <span class="icon" aria-hidden="true"></span>
+          </summary>
+          <div class="accordion-content">
             <p>Les places sont limitées à <span>500 participants</span> pour garantir une expérience interactive et de qualité.</p>
           </div>
-        </div>
+        </details>
       </section>
       
       <section id="programme" aria-labelledby="programme-title">
@@ -211,28 +211,6 @@
         document.getElementById('form-email').value = '';
       }
     }
-
-    document.querySelectorAll('.accordion-header').forEach(button => {
-        button.addEventListener('click', () => {
-            const content = button.nextElementSibling;
-            const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
-            button.setAttribute('aria-expanded', !isExpanded);
-            
-            if (!isExpanded) {
-                content.hidden = false;
-                content.style.maxHeight = content.scrollHeight + 'px';
-                button.querySelector('.icon').textContent = '−';
-            } else {
-                content.style.maxHeight = 0;
-                // Laisser le temps à l'animation de se terminer avant de masquer
-                setTimeout(() => {
-                    content.hidden = true;
-                }, 200); // 200ms, comme la transition CSS
-                button.querySelector('.icon').textContent = '+';
-            }
-        });
-    });
   </script>
 </body>
 </html>

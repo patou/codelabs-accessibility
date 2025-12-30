@@ -49,7 +49,7 @@ const tutorialSteps = [
     title: 'Étape 3 : Rendre les composants interactifs accessibles',
     description: "Les éléments avec lesquels l'utilisateur interagit, comme les accordéons, les boutons et les formulaires, nécessitent une attention particulière pour être utilisables par tous.",
     changes: [
-      { before: '<div class="accordion-item">', after: 'Utilisation de `aria-expanded`, `aria-controls`, `hidden`', explanation: 'L\'accordéon doit indiquer son état (ouvert/fermé) avec `aria-expanded` et lier le bouton à son contenu avec `aria-controls`.' },
+      { before: '<div class="accordion-item"><button class="accordion-header">', after: '<details class="accordion-item"><summary class="accordion-header">', explanation: 'L\'accordéon peut être simplifié en utilisant la balise `details`, qui gère automatiquement son état (ouvert ou fermé).' },
       { before: '<div class="favorite-btn">', after: '<button class="favorite-btn">', explanation: 'Remplacer les `<div>` cliquables par des `<button>`, qui sont nativement accessibles au clavier et sémantiques.' },
       { before: '<button ...>Favori</button>', after: '<button title="Ajouter ... aux favoris">', explanation: 'Utiliser `title` sur les boutons icônes pour fournir une description textuelle claire de leur action.' },
       { before: '<div class="session">', after: '<article class="session" tabindex="0">', explanation: 'Rendre les cartes de session focalisables avec `tabindex="0"` pour que les utilisateurs au clavier puissent y naviguer.' },
@@ -61,7 +61,7 @@ const tutorialSteps = [
     changes: [
       { before: '<div class="form-label">Nom</div><input>', after: '<label for="form-nom">Nom <input id="form-nom"></label>', explanation: 'Associer chaque `<label>` à son `<input>` avec l\'attribut `for` et un `id` correspondant. Cela permet de cliquer sur l\'étiquette pour activer le champ.' },
       { before: '<div class="form-section">', after: '<form onsubmit="validateForm(event)">', explanation: 'Utiliser une balise `<form>` pour encapsuler les champs de formulaire.' },
-      { before: '<div id="form-error"></div>', after: '<div id="form-error" role="alert" aria-live="assertive">', explanation: '`role="alert"` et `aria-live="assertive"` forcent les lecteurs d\'écran à annoncer immédiatement les messages d\'erreur dès qu\'ils apparaissent.' },
+      { before: '<div id="form-error">', after: '<div id="form-error" role="alert" aria-live="assertive">', explanation: '`role="alert"` et `aria-live="assertive"` forcent les lecteurs d\'écran à annoncer immédiatement les messages d\'erreur dès qu\'ils apparaissent.' },
       { before: '<input type="submit" onclick="validateForm()">', after: '<form onsubmit="..."><input type="submit"></form>', explanation: 'L\'événement de soumission doit être sur la balise `<form>` (`onsubmit`), pas sur le bouton (`onclick`).' },
     ],
   },
@@ -107,6 +107,7 @@ const Explanation = ({ text }: { text: string }) => {
                 switch(term) {
                   case "alt": url = `https://developer.mozilla.org/fr/docs/Web/API/HTMLImageElement/${term}`;break;
                   case "for": url = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Attributes/${term}`;break;
+                  case "details": url = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Elements/${term}`;break;
                   default: url = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Global_attributes/${term}`;break;
                 };
               }
