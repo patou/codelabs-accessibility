@@ -20,7 +20,7 @@ const CODE_VISIBILITY_STORAGE_KEY = 'codelabs-a11y-tutorial-code-visibility';
 
 const tutorialSteps = [
   {
-    title: 'Étape 1 : Sémantique et Structure',
+    title: 'Étape 1 : Sémantique et structure',
     description: "La première étape consiste à remplacer les balises `<div>` génériques par des balises HTML sémantiques. Cela aide les technologies d'assistance à comprendre la structure et le rôle de chaque partie de la page.",
     changes: [
       { before: '<div class="header">', after: '<header class="header">', explanation: 'Utiliser `<header>` pour l\'en-tête principal de la page.' },
@@ -35,7 +35,7 @@ const tutorialSteps = [
     ],
   },
   {
-    title: 'Étape 2 : Attributs Aria et Accessibilité des Images',
+    title: 'Étape 2 : Attributs aria et accessibilité des images',
     description: "Ajouter des attributs ARIA (Accessible Rich Internet Applications) pour enrichir la sémantique et rendre les composants interactifs plus clairs pour les lecteurs d'écran. Fournir des alternatives textuelles pour les images est également essentiel.",
     changes: [
       { before: '<nav>', after: '<nav aria-label="Navigation principale">', explanation: '`aria-label` donne un nom accessible à la navigation.' },
@@ -46,7 +46,7 @@ const tutorialSteps = [
     ],
   },
   {
-    title: 'Étape 3 : Rendre les Composants Interactifs Accessibles',
+    title: 'Étape 3 : Rendre les composants interactifs accessibles',
     description: "Les éléments avec lesquels l'utilisateur interagit, comme les accordéons, les boutons et les formulaires, nécessitent une attention particulière pour être utilisables par tous.",
     changes: [
       { before: '<div class="accordion-item">', after: 'Utilisation de `aria-expanded`, `aria-controls`, `hidden`', explanation: 'L\'accordéon doit indiquer son état (ouvert/fermé) avec `aria-expanded` et lier le bouton à son contenu avec `aria-controls`.' },
@@ -56,7 +56,7 @@ const tutorialSteps = [
     ],
   },
   {
-    title: 'Étape 4 : Accessibilité des Formulaires',
+    title: 'Étape 4 : Accessibilité des formulaires',
     description: "Les formulaires sont une source majeure de problèmes d'accessibilité. Il est crucial de lier correctement les étiquettes (`<label>`) aux champs de saisie (`<input>`) et de gérer les erreurs de manière accessible.",
     changes: [
       { before: '<div class="form-label">Nom</div><input>', after: '<label for="form-nom">Nom <input id="form-nom"></label>', explanation: 'Associer chaque `<label>` à son `<input>` avec l\'attribut `for` et un `id` correspondant. Cela permet de cliquer sur l\'étiquette pour activer le champ.' },
@@ -67,14 +67,18 @@ const tutorialSteps = [
   },
   {
     title: 'Etape 5 : Derniers correctifs',
-    description: "Bravo, vous avez terminé le tutoriel ! Comparez votre travail avec la solution finale entièrement accessible pour voir toutes les améliorations en action.",
-    isSolution: true,
+    description: "Les contrastes doivent être suffisamment élevés pour améliorer la lisibilité des textes et la disinction des couleurs.",
+    changes: [
+      { before: '.text-light { color: #7f8c8d; }', after: '.text-light { color: #6d797a; }', explanation: 'Vérifier les contrastes des textes via un outil adapté (`Wave`, `Contrast Finder`...), et adapter le style en conséquent.' },
+      { explanation: 'Bravo, vous avez terminé le tutoriel ! Comparez votre travail avec la solution finale entièrement accessible pour voir toutes les améliorations en action.', }
+    ],
+    isSolution: true
   }
 ];
 
 const Explanation = ({ text }: { text: string }) => {
   const parts = text.split(/(`[^`]+`)/g);
-
+  
   return (
     <>
       {parts.map((part, index) => {
@@ -86,26 +90,31 @@ const Explanation = ({ text }: { text: string }) => {
           const isAria = term.startsWith('aria-');
           const isAlertRole = codeContent == `role="alert"`;
 
-          let mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Element/${term}`;
-          if (isAttribute) {
-            if (isAria) {
-                mdnUrl = `https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Attributes/${term.split("=")[0]}`;
-            } else if (isAlertRole) {
-              mdnUrl = 'https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role';
-            }
-            else {
-              switch(term) {
-                case "alt": mdnUrl = `https://developer.mozilla.org/fr/docs/Web/API/HTMLImageElement/${term}`;break;
-                case "for": mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Attributes/${term}`;break;
-                default: mdnUrl = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Global_attributes/${term}`;break;
-              };
+          let url = "";
+          if (codeContent === "Wave") {
+            url = "https://wave.webaim.org/"
+          } else if (codeContent === "Contrast Finder") {
+            url = "https://app.contrast-finder.org/";
+          } else {
+            url = `https://developer.mozilla.org/fr/docs/Web/HTML/Element/${term}`;
+            if (isAttribute) {
+              if (isAria) {
+                  url = `https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Attributes/${term.split("=")[0]}`;
+              } else if (isAlertRole) {
+                url = 'https://developer.mozilla.org/fr/docs/Web/Accessibility/ARIA/Reference/Roles/alert_role';
+              }
+              else {
+                switch(term) {
+                  case "alt": url = `https://developer.mozilla.org/fr/docs/Web/API/HTMLImageElement/${term}`;break;
+                  case "for": url = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Attributes/${term}`;break;
+                  default: url = `https://developer.mozilla.org/fr/docs/Web/HTML/Reference/Global_attributes/${term}`;break;
+                };
+              }
             }
           }
-
-          
           return (
             <code key={index} className="text-sm p-1 bg-muted rounded-sm">
-              <a href={mdnUrl} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
+              <a href={url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
                 {codeContent}
               </a>
             </code>
@@ -194,51 +203,28 @@ export function TutorialSheet() {
           >
             {tutorialSteps.map((step, index) => {
               const stepKey = `step-${index}`;
+              const numVisible = visibleHints[stepKey] || 0;
+              const allHintsShown = numVisible === step.changes.length;
 
-              if (step.isSolution) {
-                return (
+              return (
                   <AccordionItem key={index} value={stepKey}>
-                    <AccordionTrigger className="text-lg hover:no-underline">
+                  <AccordionTrigger className="text-lg hover:no-underline">
                       {step.title}
-                    </AccordionTrigger>
-                    <AccordionContent>
+                  </AccordionTrigger>
+                  <AccordionContent>
                       <div className="space-y-4 pr-4">
-                        <p className="text-muted-foreground">{step.description}</p>
-                        <div className="mt-4 flex justify-center">
-                          <Link href="/solution" passHref>
-                            <Button size="lg">
-                              <Code className="mr-2 h-5 w-5" />
-                              Voir le code de la solution
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                );
-              }
-
-                const numVisible = visibleHints[stepKey] || 0;
-                const allHintsShown = numVisible === step.changes.length;
-
-                return (
-                    <AccordionItem key={index} value={stepKey}>
-                    <AccordionTrigger className="text-lg hover:no-underline">
-                        {step.title}
-                    </AccordionTrigger>
-                    <AccordionContent>
-                        <div className="space-y-4 pr-4">
-                            <p className="text-muted-foreground">{step.description}</p>
-                            
-                            {step.changes.slice(0, numVisible).map((change, changeIndex) => {
-                                const codeKey = `${stepKey}-${changeIndex}`;
-                                const isCodeVisible = codeVisible[codeKey] || false;
-                                return (
-                                <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
-                                    <div className="flex justify-between items-start gap-2">
-                                        <p className="flex-1 text-sm text-muted-foreground">
-                                            <Explanation text={change.explanation} />
-                                        </p>
+                          <p className="text-muted-foreground">{step.description}</p>
+                          
+                          {step.changes.slice(0, numVisible).map((change, changeIndex) => {
+                              const codeKey = `${stepKey}-${changeIndex}`;
+                              const isCodeVisible = codeVisible[codeKey] || false;
+                              return (
+                              <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
+                                  <div className="flex justify-between items-start gap-2">
+                                      <p className="flex-1 text-sm text-muted-foreground">
+                                          <Explanation text={change.explanation} />
+                                      </p>
+                                      {(!!change.before || !!change.after) &&
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => toggleCodeVisibility(stepKey, changeIndex)}>
@@ -249,41 +235,52 @@ export function TutorialSheet() {
                                                 <p>{isCodeVisible ? "Masquer" : "Afficher"} le code</p>
                                             </TooltipContent>
                                         </Tooltip>
-                                    </div>
-                                    
-                                    {isCodeVisible && (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start mt-3 animate-in fade-in-0 duration-500">
-                                            <div>
-                                                <p className="font-semibold text-destructive mb-1">Avant :</p>
-                                                <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
-                                            </div>
-                                            <div>
-                                                <p className="font-semibold text-green-600 mb-1">Après :</p>
-                                                <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                )
-                            })}
+                                      }
+                                  </div>
+                                  
+                                  {isCodeVisible && (
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start mt-3 animate-in fade-in-0 duration-500">
+                                          <div>
+                                              <p className="font-semibold text-destructive mb-1">Avant :</p>
+                                              <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
+                                          </div>
+                                          <div>
+                                              <p className="font-semibold text-green-600 mb-1">Après :</p>
+                                              <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
+                                          </div>
+                                      </div>
+                                  )}
+                              </div>
+                              )
+                          })}
 
-                        {!allHintsShown && (
-                            <div className="mt-4 flex justify-center">
-                                <Button onClick={() => showHint(stepKey, step.changes.length)}>
-                                    <Lightbulb className="mr-2 h-4 w-4" />
-                                    Voir un indice ({numVisible + 1}/{step.changes.length})
-                                </Button>
-                            </div>
-                        )}
-                          {allHintsShown && (
-                            <p className="text-center text-sm text-green-600 font-semibold mt-4">
-                                Vous avez vu tous les indices pour cette étape. Vous pouvez passer à l'étape suivante.
-                            </p>
-                        )}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              )
+                      {!allHintsShown && (
+                          <div className="mt-4 flex justify-center">
+                              <Button onClick={() => showHint(stepKey, step.changes.length)}>
+                                  <Lightbulb className="mr-2 h-4 w-4" />
+                                  Voir un indice ({numVisible + 1}/{step.changes.length})
+                              </Button>
+                          </div>
+                      )}
+                        {(allHintsShown && !step.isSolution) && (
+                          <p className="text-center text-sm text-green-600 font-semibold mt-4">
+                              Vous avez vu tous les indices pour cette étape. Vous pouvez passer à l'étape suivante.
+                          </p>
+                      )}
+                      {(allHintsShown && step.isSolution) && (
+                          <div className="mt-4 flex justify-center">
+                            <Link href="/solution" passHref>
+                              <Button size="lg">
+                                <Code className="mr-2 h-5 w-5" />
+                                Voir le code de la solution
+                              </Button>
+                            </Link>
+                          </div>
+                      )}
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            )
             })}
           </Accordion>
         </div>
