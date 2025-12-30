@@ -10,11 +10,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Code, Lightbulb } from 'lucide-react';
+import { Code, Lightbulb, Eye, EyeOff } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 const STEP_STORAGE_KEY = 'codelabs-a11y-tutorial-step';
 const HINTS_STORAGE_KEY = 'codelabs-a11y-tutorial-visible-hints';
+const CODE_VISIBILITY_STORAGE_KEY = 'codelabs-a11y-tutorial-code-visibility';
 
 const tutorialSteps = [
   {
@@ -118,24 +120,23 @@ const Explanation = ({ text }: { text: string }) => {
 
 export function TutorialSheet() {
   const [openStep, setOpenStep] = useState<string | undefined>(undefined);
-  const [visibleChanges, setVisibleChanges] = useState<{ [key: string]: number }>({});
+  const [visibleHints, setVisibleHints] = useState<{ [key: string]: number }>({});
+  const [codeVisible, setCodeVisible] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
     const savedStep = localStorage.getItem(STEP_STORAGE_KEY);
-    if (savedStep) {
-      setOpenStep(savedStep);
-    } else {
-      setOpenStep('step-0');
-    }
+    setOpenStep(savedStep || 'step-0');
 
     try {
       const savedHints = localStorage.getItem(HINTS_STORAGE_KEY);
-      if (savedHints) {
-        setVisibleChanges(JSON.parse(savedHints));
-      }
+      if (savedHints) setVisibleHints(JSON.parse(savedHints));
+
+      const savedCodeVisibility = localStorage.getItem(CODE_VISIBILITY_STORAGE_KEY);
+      if (savedCodeVisibility) setCodeVisible(JSON.parse(savedCodeVisibility));
     } catch (e) {
-      console.error("Failed to parse visible hints from localStorage", e);
+      console.error("Failed to parse from localStorage", e);
       localStorage.removeItem(HINTS_STORAGE_KEY);
+      localStorage.removeItem(CODE_VISIBILITY_STORAGE_KEY);
     }
   }, []);
 
@@ -150,20 +151,31 @@ export function TutorialSheet() {
   };
   
   const showHint = (stepKey: string, maxHints: number) => {
-    setVisibleChanges(prev => {
+    setVisibleHints(prev => {
       const currentVisibleCount = prev[stepKey] || 0;
       if (currentVisibleCount < maxHints) {
-        const newChanges = {
+        const newHints = {
           ...prev,
           [stepKey]: currentVisibleCount + 1,
         };
-        localStorage.setItem(HINTS_STORAGE_KEY, JSON.stringify(newChanges));
-        return newChanges;
+        localStorage.setItem(HINTS_STORAGE_KEY, JSON.stringify(newHints));
+        return newHints;
       }
       return prev;
     });
   };
 
+  const toggleCodeVisibility = (stepKey: string, hintIndex: number) => {
+    const codeKey = `${stepKey}-${hintIndex}`;
+    setCodeVisible(prev => {
+      const newCodeVisibility = {
+        ...prev,
+        [codeKey]: !prev[codeKey]
+      };
+      localStorage.setItem(CODE_VISIBILITY_STORAGE_KEY, JSON.stringify(newCodeVisibility));
+      return newCodeVisibility;
+    });
+  }
 
   return (
     <ScrollArea className="h-full">
@@ -206,36 +218,54 @@ export function TutorialSheet() {
                 );
               }
 
-              const numVisible = visibleChanges[stepKey] || 0;
-              const allHintsShown = numVisible === step.changes.length;
+                const numVisible = visibleHints[stepKey] || 0;
+                const allHintsShown = numVisible === step.changes.length;
 
-              return (
-                <AccordionItem key={index} value={stepKey}>
-                  <AccordionTrigger className="text-lg hover:no-underline">
-                    {step.title}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-4 pr-4">
-                        <p className="text-muted-foreground">{step.description}</p>
-                        
-                        {step.changes.slice(0, numVisible).map((change, changeIndex) => (
-                          <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
-                              <div>
-                                <p className="font-semibold text-destructive mb-1">Avant :</p>
-                                <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
-                              </div>
-                              <div>
-                                <p className="font-semibold text-green-600 mb-1">Après :</p>
-                                <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
-                              </div>
-                            </div>
-                            <p className="mt-3 text-sm text-muted-foreground">
-                              <span className="font-semibold">Pourquoi ?</span>{' '}
-                              <Explanation text={change.explanation} />
-                            </p>
-                          </div>
-                        ))}
+                return (
+                    <AccordionItem key={index} value={stepKey}>
+                    <AccordionTrigger className="text-lg hover:no-underline">
+                        {step.title}
+                    </AccordionTrigger>
+                    <AccordionContent>
+                        <div className="space-y-4 pr-4">
+                            <p className="text-muted-foreground">{step.description}</p>
+                            
+                            {step.changes.slice(0, numVisible).map((change, changeIndex) => {
+                                const codeKey = `${stepKey}-${changeIndex}`;
+                                const isCodeVisible = codeVisible[codeKey] || false;
+                                return (
+                                <div key={changeIndex} className="p-4 rounded-lg border bg-muted/30 animate-in fade-in-50 duration-300">
+                                    <div className="flex justify-between items-start gap-2">
+                                        <p className="flex-1 text-sm text-muted-foreground">
+                                            <Explanation text={change.explanation} />
+                                        </p>
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => toggleCodeVisibility(stepKey, changeIndex)}>
+                                                    {isCodeVisible ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                                </Button>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>{isCodeVisible ? "Masquer" : "Afficher"} le code</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                    </div>
+                                    
+                                    {isCodeVisible && (
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start mt-3 animate-in fade-in-0 duration-500">
+                                            <div>
+                                                <p className="font-semibold text-destructive mb-1">Avant :</p>
+                                                <code className="text-sm p-2 bg-destructive/10 text-destructive rounded-md block overflow-auto whitespace-pre-wrap">{change.before}</code>
+                                            </div>
+                                            <div>
+                                                <p className="font-semibold text-green-600 mb-1">Après :</p>
+                                                <code className="text-sm p-2 bg-green-600/10 text-green-700 rounded-md block overflow-auto whitespace-pre-wrap">{change.after}</code>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                                )
+                            })}
 
                         {!allHintsShown && (
                             <div className="mt-4 flex justify-center">
